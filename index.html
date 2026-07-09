@@ -3,530 +3,611 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portfolio — Developer</title>
+  <title>Christopher Padilla — Visual Artist</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Playfair Display', 'serif'],
+          },
+          colors: {
+            paper: '#f5f0eb',
+            ink: '#1a1a1a',
+            muted: '#6b6b6b',
+            accent: '#c23616',
+            line: '#d4cdc5',
+          }
         }
       }
     }
   </script>
   <style>
-    ::selection { background: #ffedd5; color: #7c2d12; }
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: #fafaf9; }
-    ::-webkit-scrollbar-thumb { background: #d6d3d1; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #a8a29e; }
+    ::selection { background: #c23616; color: #fff; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #f5f0eb; }
+    ::-webkit-scrollbar-thumb { background: #1a1a1a; border-radius: 2px; }
 
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(40px); }
       to { opacity: 1; transform: translateY(0); }
     }
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
-    @keyframes slideInLeft {
+    @keyframes slideRight {
       from { opacity: 0; transform: translateX(-30px); }
       to { opacity: 1; transform: translateX(0); }
     }
-    @keyframes pulse-dot {
-      50% { opacity: 0.5; }
+    @keyframes drawLine {
+      from { width: 0; }
+      to { width: 100%; }
     }
-    .animate-fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
-    .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
-    .animate-slide-in-left { animation: slideInLeft 0.6s ease-out forwards; }
-    .delay-100 { animation-delay: 0.1s; }
-    .delay-200 { animation-delay: 0.2s; }
-    .delay-300 { animation-delay: 0.3s; }
-    .delay-400 { animation-delay: 0.4s; }
-    .delay-500 { animation-delay: 0.5s; }
-    .delay-600 { animation-delay: 0.6s; }
-    .opacity-0-init { opacity: 0; }
-
-    .toast-enter { animation: fadeInUp 0.4s ease-out forwards; }
-    .toast-exit { animation: fadeOut 0.3s ease-in forwards; }
-    @keyframes fadeOut {
-      from { opacity: 1; transform: translateY(0); }
-      to { opacity: 0; transform: translateY(-10px); }
+    @keyframes stampIn {
+      0% { opacity: 0; transform: scale(2) rotate(-15deg); }
+      60% { opacity: 1; transform: scale(0.9) rotate(-12deg); }
+      100% { opacity: 1; transform: scale(1) rotate(-12deg); }
+    }
+    @keyframes grain {
+      0%, 100% { transform: translate(0,0); }
+      10% { transform: translate(-5%,-10%); }
+      30% { transform: translate(3%,-15%); }
+      50% { transform: translate(12%,9%); }
+      70% { transform: translate(9%,4%); }
+      90% { transform: translate(-1%,7%); }
     }
 
-    .project-card:hover .project-img { transform: scale(1.05); }
-    .project-card:hover .project-overlay { opacity: 1; }
+    .anim-fade-up { animation: fadeUp 0.8s ease-out forwards; }
+    .anim-fade-in { animation: fadeIn 0.6s ease-out forwards; }
+    .anim-slide-right { animation: slideRight 0.7s ease-out forwards; }
+    .anim-stamp { animation: stampIn 0.5s ease-out forwards; }
+    .delay-1 { animation-delay: 0.15s; }
+    .delay-2 { animation-delay: 0.3s; }
+    .delay-3 { animation-delay: 0.45s; }
+    .delay-4 { animation-delay: 0.6s; }
+    .delay-5 { animation-delay: 0.75s; }
+    .delay-6 { animation-delay: 0.9s; }
+    .op-0 { opacity: 0; }
+
+    .grain-overlay::before {
+      content: '';
+      position: fixed;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      animation: grain 8s steps(10) infinite;
+    }
+
+    .hand-underline {
+      background-image: url("data:image/svg+xml,%3Csvg width='200' height='12' viewBox='0 0 200 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 8C30 3 70 2 100 5C130 8 170 4 198 6' stroke='%23c23616' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: bottom;
+      background-size: 100% 12px;
+      padding-bottom: 8px;
+    }
+
+    .stamp {
+      border: 3px solid #c23616;
+      color: #c23616;
+      padding: 6px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      transform: rotate(-12deg);
+      display: inline-block;
+    }
+
+    .work-item:hover .work-img { transform: scale(1.03); }
+    .work-item:hover .work-overlay { opacity: 1; }
+    .work-item:hover .work-title { letter-spacing: 0.15em; }
+
+    .divider-line {
+      height: 1px;
+      background: #d4cdc5;
+      position: relative;
+    }
+    .divider-line::after {
+      content: '';
+      position: absolute;
+      left: 0; top: 0;
+      height: 1px;
+      background: #1a1a1a;
+      animation: drawLine 1.2s ease-out forwards;
+    }
+
+    .toast-enter { animation: fadeUp 0.4s ease-out forwards; }
+    .toast-exit { animation: fadeUp 0.3s ease-in reverse forwards; }
+
+    @media print {
+      .no-print { display: none !important; }
+    }
   </style>
 </head>
-<body class="bg-[#fafaf9] text-stone-800 font-sans antialiased">
+<body class="bg-paper text-ink font-sans antialiased grain-overlay">
 
   <!-- Toast Container -->
-  <div id="toast-container" class="fixed top-20 right-6 z-[100] flex flex-col gap-3"></div>
+  <div id="toast-container" class="fixed top-6 right-6 z-[1000] flex flex-col gap-3"></div>
 
   <!-- Navigation -->
-  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 h-16 bg-white/80 backdrop-blur-md border-b border-stone-200/50 transition-all duration-300">
-    <div class="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
-      <a href="#hero" class="flex items-center gap-2 group">
-        <div class="w-8 h-8 bg-stone-900 rounded-lg flex items-center justify-center group-hover:bg-orange-700 transition-colors duration-150">
-          <span class="text-white text-sm font-semibold">D</span>
-        </div>
-        <span class="font-semibold text-stone-900">dev.portfolio</span>
-      </a>
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-paper/90 backdrop-blur-sm border-b border-line transition-all duration-500">
+    <div class="max-w-6xl mx-auto px-6 md:px-10 h-14 flex items-center justify-between">
+      <a href="#hero" class="font-serif font-bold text-lg tracking-tight">C.P</a>
 
-      <div class="hidden md:flex items-center gap-8">
-        <a href="#about" class="text-sm font-medium text-stone-500 hover:text-orange-800 transition-colors duration-150">Tentang</a>
-        <a href="#experience" class="text-sm font-medium text-stone-500 hover:text-orange-800 transition-colors duration-150">Pengalaman</a>
-        <a href="#projects" class="text-sm font-medium text-stone-500 hover:text-orange-800 transition-colors duration-150">Proyek</a>
-        <a href="#contact" class="text-sm font-medium text-stone-500 hover:text-orange-800 transition-colors duration-150">Kontak</a>
-        <a href="#contact" class="inline-flex items-center gap-2 px-5 py-2.5 bg-stone-900 text-white text-sm font-medium rounded-full hover:bg-stone-800 transition-colors duration-150 shadow-lg shadow-stone-900/10">
-          Hubungi Saya
-          <i data-lucide="arrow-right" class="w-4 h-4"></i>
-        </a>
+      <div class="hidden md:flex items-center gap-10">
+        <a href="#about" class="nav-link text-[11px] font-semibold tracking-[0.2em] uppercase text-muted hover:text-ink transition-colors duration-300">Tentang</a>
+        <a href="#works" class="nav-link text-[11px] font-semibold tracking-[0.2em] uppercase text-muted hover:text-ink transition-colors duration-300">Karya</a>
+        <a href="#experience" class="nav-link text-[11px] font-semibold tracking-[0.2em] uppercase text-muted hover:text-ink transition-colors duration-300">Pengalaman</a>
+        <a href="#contact" class="nav-link text-[11px] font-semibold tracking-[0.2em] uppercase text-muted hover:text-ink transition-colors duration-300">Kontak</a>
       </div>
 
-      <button id="mobile-menu-btn" class="md:hidden p-2 rounded-full bg-stone-100 hover:bg-stone-200 transition-colors duration-150">
-        <i data-lucide="menu" class="w-5 h-5 text-stone-700"></i>
+      <button id="mobile-menu-btn" class="md:hidden p-2 hover:bg-ink/5 rounded transition-colors">
+        <i data-lucide="menu" class="w-4 h-4"></i>
       </button>
     </div>
 
     <!-- Mobile Menu -->
-    <div id="mobile-menu" class="md:hidden hidden absolute top-16 left-0 right-0 bg-white/95 backdrop-blur-md border-b border-stone-200/50 shadow-lg">
-      <div class="px-6 py-4 flex flex-col gap-3">
-        <a href="#about" class="mobile-link py-2.5 text-sm font-medium text-stone-600 hover:text-orange-800 transition-colors">Tentang</a>
-        <a href="#experience" class="mobile-link py-2.5 text-sm font-medium text-stone-600 hover:text-orange-800 transition-colors">Pengalaman</a>
-        <a href="#projects" class="mobile-link py-2.5 text-sm font-medium text-stone-600 hover:text-orange-800 transition-colors">Proyek</a>
-        <a href="#contact" class="mobile-link py-2.5 text-sm font-medium text-stone-600 hover:text-orange-800 transition-colors">Kontak</a>
-        <a href="#contact" class="mt-2 inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-stone-900 text-white text-sm font-medium rounded-full">Hubungi Saya</a>
+    <div id="mobile-menu" class="md:hidden hidden border-t border-line bg-paper/95 backdrop-blur-sm">
+      <div class="px-6 py-6 flex flex-col gap-4">
+        <a href="#about" class="mobile-link text-sm font-semibold tracking-[0.15em] uppercase text-muted">Tentang</a>
+        <a href="#works" class="mobile-link text-sm font-semibold tracking-[0.15em] uppercase text-muted">Karya</a>
+        <a href="#experience" class="mobile-link text-sm font-semibold tracking-[0.15em] uppercase text-muted">Pengalaman</a>
+        <a href="#contact" class="mobile-link text-sm font-semibold tracking-[0.15em] uppercase text-muted">Kontak</a>
       </div>
     </div>
   </nav>
 
-  <!-- Hero Section -->
-  <section id="hero" class="pt-32 pb-20 lg:pt-48 lg:pb-32 px-6">
-    <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
-      <div class="opacity-0-init animate-fade-in-up">
-        <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-orange-50 border border-orange-100 rounded-full mb-6">
-          <span class="w-2 h-2 bg-green-500 rounded-full" style="animation: pulse-dot 2s cubic-bezier(0.4,0,0.6,1) infinite"></span>
-          <span class="text-xs font-medium text-orange-800">Tersedia untuk proyek baru</span>
-        </div>
-        <h1 class="text-5xl lg:text-7xl font-semibold text-stone-900 tracking-tight leading-[1.1] mb-6">
-          Halo, saya<br>
-          <span class="text-orange-700">Developer</span>
-        </h1>
-        <p class="text-lg text-stone-500 leading-relaxed max-w-lg mb-8">
-          Saya membangun pengalaman digital yang indah dan fungsional. Fokus pada React, Next.js, dan ekosistem modern web development.
-        </p>
-        <div class="flex flex-wrap items-center gap-4">
-          <a href="#projects" class="inline-flex items-center gap-2 px-8 py-3.5 bg-stone-900 text-white text-sm font-medium rounded-full hover:bg-stone-800 transition-colors duration-150 shadow-lg shadow-stone-900/10">
-            Lihat Proyek
-            <i data-lucide="arrow-down" class="w-4 h-4"></i>
-          </a>
-          <a href="#about" class="inline-flex items-center gap-2 px-8 py-3.5 bg-white text-stone-700 text-sm font-medium rounded-full border border-stone-200/60 hover:bg-stone-50 hover:border-stone-300 transition-all duration-150">
-            Tentang Saya
-          </a>
+  <!-- ==================== HERO ==================== -->
+  <section id="hero" class="min-h-screen flex items-end pb-12 md:pb-20 px-6 md:px-10 pt-14">
+    <div class="max-w-6xl mx-auto w-full">
+      <div class="grid lg:grid-cols-5 gap-10 lg:gap-16 items-end">
+        
+        <!-- Left: Photo -->
+        <div class="lg:col-span-2 op-0 anim-fade-up">
+          <div class="relative">
+            <div class="aspect-[3/4] bg-line overflow-hidden">
+              <img src="https://picsum.photos/seed/artistportrait/600/800.jpg" alt="Portrait" class="w-full h-full object-cover grayscale contrast-125 mix-blend-multiply">
+            </div>
+            <!-- Handwritten annotation -->
+            <div class="absolute -bottom-4 -right-2 md:-right-6 bg-paper px-3 py-1">
+              <span class="font-serif italic text-sm text-muted">Damaso y Pbo de Ig.</span>
+            </div>
+            <!-- Corner mark -->
+            <div class="absolute top-3 left-3 w-6 h-6 border-t-2 border-l-2 border-ink/30"></div>
+            <div class="absolute bottom-3 right-3 w-6 h-6 border-b-2 border-r-2 border-ink/30"></div>
+          </div>
         </div>
 
-        <div class="flex items-center gap-8 mt-12 pt-8 border-t border-stone-200/50">
-          <div>
-            <div class="text-2xl font-semibold text-stone-900">3+</div>
-            <div class="text-xs text-stone-500 mt-0.5">Tahun Pengalaman</div>
+        <!-- Right: Text -->
+        <div class="lg:col-span-3">
+          <div class="op-0 anim-fade-up delay-1">
+            <div class="flex items-center gap-3 mb-6">
+              <div class="w-8 h-px bg-ink"></div>
+              <span class="text-[10px] font-bold tracking-[0.3em] uppercase text-muted">Portfolio 2025</span>
+            </div>
           </div>
-          <div class="w-px h-10 bg-stone-200"></div>
-          <div>
-            <div class="text-2xl font-semibold text-stone-900">20+</div>
-            <div class="text-xs text-stone-500 mt-0.5">Proyek Selesai</div>
+
+          <h1 class="op-0 anim-fade-up delay-2">
+            <span class="block font-serif text-5xl md:text-7xl lg:text-8xl font-bold leading-[0.9] tracking-tight">Chris-</span>
+            <span class="block font-serif text-5xl md:text-7xl lg:text-8xl font-bold leading-[0.9] tracking-tight">topher</span>
+            <span class="block font-serif text-5xl md:text-7xl lg:text-8xl font-bold leading-[0.9] tracking-tight italic text-accent">Padilla</span>
+          </h1>
+
+          <div class="mt-8 op-0 anim-fade-up delay-3">
+            <p class="text-[11px] font-bold tracking-[0.25em] uppercase text-muted mb-4">Visual Artist — since 2021</p>
+            <div class="w-full h-px bg-line mb-6"></div>
+            <p class="text-sm text-muted leading-relaxed max-w-md">
+              Menciptakan karya visual yang bercerita. Menggabungkan fotografi, ilustrasi digital, dan desain grafis menjadi satu narasi yang kuat dan autentik.
+            </p>
           </div>
-          <div class="w-px h-10 bg-stone-200"></div>
-          <div>
-            <div class="text-2xl font-semibold text-stone-900">15+</div>
-            <div class="text-xs text-stone-500 mt-0.5">Klien Puas</div>
+
+          <div class="mt-8 flex items-center gap-6 op-0 anim-fade-up delay-4">
+            <a href="#works" class="group inline-flex items-center gap-3 text-[11px] font-bold tracking-[0.2em] uppercase hover:text-accent transition-colors duration-300">
+              Lihat Karya
+              <i data-lucide="arrow-down-right" class="w-4 h-4 group-hover:translate-x-1 group-hover:translate-y-1 transition-transform duration-300"></i>
+            </a>
+            <div class="stamp op-0 anim-stamp delay-5">Available</div>
           </div>
         </div>
       </div>
 
-      <div class="opacity-0-init animate-fade-in-up delay-300 relative">
-        <div class="relative rounded-3xl overflow-hidden shadow-2xl shadow-stone-900/10">
-          <img src="https://picsum.photos/seed/heroportfolio/800/600.jpg" alt="Hero" class="w-full h-[400px] lg:h-[500px] object-cover">
-          <div class="absolute inset-0 bg-gradient-to-t from-stone-900/40 to-transparent"></div>
-          <div class="absolute bottom-6 left-6 right-6">
-            <div class="flex items-center gap-3 bg-white/90 backdrop-blur-sm rounded-2xl p-4">
-              <div class="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center">
-                <i data-lucide="code-2" class="w-5 h-5 text-orange-700"></i>
+      <!-- Scroll indicator -->
+      <div class="hidden lg:flex justify-end mt-16 op-0 anim-fade-in delay-6">
+        <div class="flex flex-col items-center gap-2 text-muted">
+          <span class="text-[9px] tracking-[0.3em] uppercase font-semibold" style="writing-mode: vertical-lr;">Scroll</span>
+          <div class="w-px h-10 bg-line relative overflow-hidden">
+            <div class="w-full h-1/2 bg-ink absolute top-0 animate-bounce"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== ABOUT ==================== -->
+  <section id="about" class="py-20 md:py-32 px-6 md:px-10">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid lg:grid-cols-2 gap-16 items-start">
+        
+        <div class="scroll-reveal op-0">
+          <span class="text-[10px] font-bold tracking-[0.3em] uppercase text-muted block mb-4">01 — Tentang</span>
+          <h2 class="font-serif text-3xl md:text-4xl font-bold leading-tight mb-2">
+            Seni adalah <span class="hand-underline">bahasa</span> yang saya gunakan
+          </h2>
+          <div class="w-16 h-px bg-accent mt-6"></div>
+        </div>
+
+        <div class="scroll-reveal op-0 delay-2">
+          <p class="text-sm text-muted leading-[1.8] mb-6">
+            Saya adalah seorang seniman visual berbasis di Indonesia yang fokus pada penciptaan karya yang memadukan elemen fotografi dokumenter dengan ilustrasi digital. Setiap karya saya lahir dari observasi mendalam terhadap kehidupan sehari-hari — percakapan, tekstur kota, dan momen-momen yang sering terlewatkan.
+          </p>
+          <p class="text-sm text-muted leading-[1.8] mb-8">
+            Sejak 2021, saya telah berkolaborasi dengan berbagai brand, majalah, dan komunitas kreatif untuk menghadirkan visual yang tidak hanya indah secara estetika, tetapi juga menyentuh secara emosional.
+          </p>
+
+          <div class="grid grid-cols-3 gap-6 pt-6 border-t border-line">
+            <div>
+              <div class="font-serif text-3xl font-bold">20+</div>
+              <div class="text-[10px] tracking-[0.2em] uppercase text-muted mt-1">Pameran</div>
+            </div>
+            <div>
+              <div class="font-serif text-3xl font-bold">50+</div>
+              <div class="text-[10px] tracking-[0.2em] uppercase text-muted mt-1">Karya</div>
+            </div>
+            <div>
+              <div class="font-serif text-3xl font-bold">4</div>
+              <div class="text-[10px] tracking-[0.2em] uppercase text-muted mt-1">Tahun</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Skills / Tools -->
+      <div class="mt-20 grid grid-cols-2 md:grid-cols-4 gap-px bg-line scroll-reveal op-0 delay-3">
+        <div class="bg-paper p-6 hover:bg-ink/5 transition-colors duration-300 group">
+          <i data-lucide="camera" class="w-5 h-5 text-accent mb-3"></i>
+          <div class="text-xs font-bold tracking-[0.15em] uppercase">Fotografi</div>
+          <div class="text-[10px] text-muted mt-1">Digital & Analog</div>
+        </div>
+        <div class="bg-paper p-6 hover:bg-ink/5 transition-colors duration-300 group">
+          <i data-lucide="pen-tool" class="w-5 h-5 text-accent mb-3"></i>
+          <div class="text-xs font-bold tracking-[0.15em] uppercase">Ilustrasi</div>
+          <div class="text-[10px] text-muted mt-1">Digital Art</div>
+        </div>
+        <div class="bg-paper p-6 hover:bg-ink/5 transition-colors duration-300 group">
+          <i data-lucide="layers" class="w-5 h-5 text-accent mb-3"></i>
+          <div class="text-xs font-bold tracking-[0.15em] uppercase">Grafis</div>
+          <div class="text-[10px] text-muted mt-1">Poster & Branding</div>
+        </div>
+        <div class="bg-paper p-6 hover:bg-ink/5 transition-colors duration-300 group">
+          <i data-lucide="film" class="w-5 h-5 text-accent mb-3"></i>
+          <div class="text-xs font-bold tracking-[0.15em] uppercase">Motion</div>
+          <div class="text-[10px] text-muted mt-1">Video Art</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== WORKS / PROJECTS ==================== -->
+  <section id="works" class="py-20 md:py-32 px-6 md:px-10 bg-ink text-white">
+    <div class="max-w-6xl mx-auto">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-16">
+        <div class="scroll-reveal op-0">
+          <span class="text-[10px] font-bold tracking-[0.3em] uppercase text-white/40 block mb-4">02 — Karya Terpilih</span>
+          <h2 class="font-serif text-3xl md:text-4xl font-bold leading-tight">Selected<br><span class="italic text-accent">Works</span></h2>
+        </div>
+        <div class="flex gap-3 mt-6 md:mt-0 scroll-reveal op-0 delay-2">
+          <button onclick="filterWorks('all')" class="filter-btn active px-4 py-2 text-[10px] font-bold tracking-[0.2em] uppercase border border-white/30 bg-white text-ink rounded-none transition-all duration-300" data-filter="all">Semua</button>
+          <button onclick="filterWorks('featured')" class="filter-btn px-4 py-2 text-[10px] font-bold tracking-[0.2em] uppercase border border-white/20 text-white/60 hover:border-white/50 hover:text-white rounded-none transition-all duration-300" data-filter="featured">Unggulan</button>
+        </div>
+      </div>
+
+      <!-- Works Grid -->
+      <div id="works-grid" class="grid md:grid-cols-2 gap-8">
+        <!-- Fallback static works -->
+        <div id="works-fallback">
+
+          <div class="work-item group cursor-pointer scroll-reveal op-0" data-featured="true">
+            <div class="relative overflow-hidden aspect-[4/3]">
+              <img src="https://picsum.photos/seed/artwork1/800/600.jpg" alt="Urban Fragments" class="work-img w-full h-full object-cover grayscale contrast-110 transition-transform duration-700 ease-out">
+              <div class="work-overlay absolute inset-0 bg-accent/20 opacity-0 transition-opacity duration-500"></div>
+              <div class="absolute top-4 left-4">
+                <span class="stamp text-[9px] py-1 px-2 border-white text-white" style="transform:rotate(-8deg)">Featured</span>
               </div>
+              <div class="absolute bottom-4 right-4 w-8 h-8 border border-white/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-white"></i>
+              </div>
+            </div>
+            <div class="mt-4 flex items-start justify-between">
               <div>
-                <div class="text-sm font-medium text-stone-900">Full Stack Developer</div>
-                <div class="text-xs text-stone-500">React · Next.js · Supabase</div>
+                <h3 class="work-title font-serif text-lg font-bold tracking-wide transition-all duration-300">Urban Fragments</h3>
+                <p class="text-[10px] tracking-[0.15em] uppercase text-white/40 mt-1">Fotografi — 2024</p>
+              </div>
+              <span class="text-[10px] text-white/30 font-mono">01</span>
+            </div>
+          </div>
+
+          <div class="work-item group cursor-pointer mt-8 scroll-reveal op-0 delay-1" data-featured="true">
+            <div class="relative overflow-hidden aspect-[4/3]">
+              <img src="https://picsum.photos/seed/artwork2/800/600.jpg" alt="Silent Conversations" class="work-img w-full h-full object-cover grayscale contrast-110 transition-transform duration-700 ease-out">
+              <div class="work-overlay absolute inset-0 bg-accent/20 opacity-0 transition-opacity duration-500"></div>
+              <div class="absolute top-4 left-4">
+                <span class="stamp text-[9px] py-1 px-2 border-white text-white" style="transform:rotate(-8deg)">Featured</span>
+              </div>
+              <div class="absolute bottom-4 right-4 w-8 h-8 border border-white/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-white"></i>
               </div>
             </div>
+            <div class="mt-4 flex items-start justify-between">
+              <div>
+                <h3 class="work-title font-serif text-lg font-bold tracking-wide transition-all duration-300">Silent Conversations</h3>
+                <p class="text-[10px] tracking-[0.15em] uppercase text-white/40 mt-1">Ilustrasi Digital — 2024</p>
+              </div>
+              <span class="text-[10px] text-white/30 font-mono">02</span>
+            </div>
           </div>
+
+          <div class="work-item group cursor-pointer mt-8 scroll-reveal op-0 delay-2" data-featured="false">
+            <div class="relative overflow-hidden aspect-[4/3]">
+              <img src="https://picsum.photos/seed/artwork3/800/600.jpg" alt="Metropolis Dreams" class="work-img w-full h-full object-cover grayscale contrast-110 transition-transform duration-700 ease-out">
+              <div class="work-overlay absolute inset-0 bg-accent/20 opacity-0 transition-opacity duration-500"></div>
+              <div class="absolute bottom-4 right-4 w-8 h-8 border border-white/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-white"></i>
+              </div>
+            </div>
+            <div class="mt-4 flex items-start justify-between">
+              <div>
+                <h3 class="work-title font-serif text-lg font-bold tracking-wide transition-all duration-300">Metropolis Dreams</h3>
+                <p class="text-[10px] tracking-[0.15em] uppercase text-white/40 mt-1">Poster — 2023</p>
+              </div>
+              <span class="text-[10px] text-white/30 font-mono">03</span>
+            </div>
+          </div>
+
+          <div class="work-item group cursor-pointer mt-8 scroll-reveal op-0 delay-3" data-featured="true">
+            <div class="relative overflow-hidden aspect-[4/3]">
+              <img src="https://picsum.photos/seed/artwork4/800/600.jpg" alt="Echoes of Light" class="work-img w-full h-full object-cover grayscale contrast-110 transition-transform duration-700 ease-out">
+              <div class="work-overlay absolute inset-0 bg-accent/20 opacity-0 transition-opacity duration-500"></div>
+              <div class="absolute top-4 left-4">
+                <span class="stamp text-[9px] py-1 px-2 border-white text-white" style="transform:rotate(-8deg)">Featured</span>
+              </div>
+              <div class="absolute bottom-4 right-4 w-8 h-8 border border-white/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-white"></i>
+              </div>
+            </div>
+            <div class="mt-4 flex items-start justify-between">
+              <div>
+                <h3 class="work-title font-serif text-lg font-bold tracking-wide transition-all duration-300">Echoes of Light</h3>
+                <p class="text-[10px] tracking-[0.15em] uppercase text-white/40 mt-1">Video Art — 2023</p>
+              </div>
+              <span class="text-[10px] text-white/30 font-mono">04</span>
+            </div>
+          </div>
+
+          <div class="work-item group cursor-pointer mt-8 scroll-reveal op-0 delay-4" data-featured="false">
+            <div class="relative overflow-hidden aspect-[4/3]">
+              <img src="https://picsum.photos/seed/artwork5/800/600.jpg" alt="Textured Memories" class="work-img w-full h-full object-cover grayscale contrast-110 transition-transform duration-700 ease-out">
+              <div class="work-overlay absolute inset-0 bg-accent/20 opacity-0 transition-opacity duration-500"></div>
+              <div class="absolute bottom-4 right-4 w-8 h-8 border border-white/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-white"></i>
+              </div>
+            </div>
+            <div class="mt-4 flex items-start justify-between">
+              <div>
+                <h3 class="work-title font-serif text-lg font-bold tracking-wide transition-all duration-300">Textured Memories</h3>
+                <p class="text-[10px] tracking-[0.15em] uppercase text-white/40 mt-1">Mixed Media — 2023</p>
+              </div>
+              <span class="text-[10px] text-white/30 font-mono">05</span>
+            </div>
+          </div>
+
+          <div class="work-item group cursor-pointer mt-8 scroll-reveal op-0 delay-5" data-featured="false">
+            <div class="relative overflow-hidden aspect-[4/3]">
+              <img src="https://picsum.photos/seed/artwork6/800/600.jpg" alt="Between Lines" class="work-img w-full h-full object-cover grayscale contrast-110 transition-transform duration-700 ease-out">
+              <div class="work-overlay absolute inset-0 bg-accent/20 opacity-0 transition-opacity duration-500"></div>
+              <div class="absolute bottom-4 right-4 w-8 h-8 border border-white/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-white"></i>
+              </div>
+            </div>
+            <div class="mt-4 flex items-start justify-between">
+              <div>
+                <h3 class="work-title font-serif text-lg font-bold tracking-wide transition-all duration-300">Between Lines</h3>
+                <p class="text-[10px] tracking-[0.15em] uppercase text-white/40 mt-1">Ilustrasi — 2022</p>
+              </div>
+              <span class="text-[10px] text-white/30 font-mono">06</span>
+            </div>
+          </div>
+
         </div>
-        <!-- Decorative -->
-        <div class="absolute -top-4 -right-4 w-24 h-24 bg-orange-100 rounded-2xl -z-10"></div>
-        <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-stone-100 rounded-full -z-10"></div>
+
+        <div id="works-dynamic" class="grid md:grid-cols-2 gap-8 hidden"></div>
       </div>
     </div>
   </section>
 
-  <!-- About Section -->
-  <section id="about" class="py-24 px-6">
-    <div class="max-w-7xl mx-auto">
-      <div class="text-center mb-16 scroll-reveal opacity-0-init">
-        <span class="inline-block px-3 py-1 bg-orange-50 border border-orange-100 rounded-full text-xs font-medium text-orange-800 mb-4">Tentang Saya</span>
-        <h2 class="text-3xl font-semibold text-stone-900 tracking-tight">Mengenal lebih dekat</h2>
+  <!-- ==================== EXPERIENCE ==================== -->
+  <section id="experience" class="py-20 md:py-32 px-6 md:px-10">
+    <div class="max-w-6xl mx-auto">
+      <div class="mb-16 scroll-reveal op-0">
+        <span class="text-[10px] font-bold tracking-[0.3em] uppercase text-muted block mb-4">03 — Pengalaman</span>
+        <h2 class="font-serif text-3xl md:text-4xl font-bold leading-tight">Exhibitions &<br><span class="italic text-accent">Collaborations</span></h2>
       </div>
 
-      <div class="grid lg:grid-cols-2 gap-16 items-center">
-        <div class="scroll-reveal opacity-0-init">
-          <div class="grid grid-cols-2 gap-4">
-            <img src="https://picsum.photos/seed/about1/400/500.jpg" alt="About 1" class="rounded-2xl object-cover h-64 w-full">
-            <img src="https://picsum.photos/seed/about2/400/500.jpg" alt="About 2" class="rounded-2xl object-cover h-64 w-full mt-8">
-          </div>
-        </div>
-
-        <div class="scroll-reveal opacity-0-init delay-200">
-          <h3 class="text-2xl font-semibold text-stone-900 mb-4">Passionate dalam membangun produk digital</h3>
-          <p class="text-stone-500 leading-relaxed mb-6">
-            Saya adalah seorang developer yang berpengalaman dalam membangun aplikasi web modern. Dengan latar belakang di bidang informatika dan pengalaman kerja di berbagai perusahaan, saya memahami bagaimana mengubah ide menjadi produk digital yang berdampak.
-          </p>
-          <p class="text-stone-500 leading-relaxed mb-8">
-            Saya percaya bahwa kode yang baik bukan hanya tentang fungsionalitas, tapi juga tentang maintainability, performa, dan pengalaman pengguna yang luar biasa.
-          </p>
-
-          <div class="grid grid-cols-2 gap-4 mb-8">
-            <div class="p-4 bg-white rounded-xl border border-stone-200/50">
-              <i data-lucide="layout" class="w-5 h-5 text-orange-700 mb-2"></i>
-              <div class="text-sm font-medium text-stone-900">Frontend</div>
-              <div class="text-xs text-stone-500 mt-0.5">React, Next.js, Vue</div>
+      <div id="exp-list" class="border-t border-ink">
+        <!-- Fallback -->
+        <div id="exp-fallback">
+          <div class="exp-item group py-8 border-b border-ink/20 grid grid-cols-12 gap-4 items-start scroll-reveal op-0 hover:bg-ink/[0.02] transition-colors duration-300 px-2 -mx-2">
+            <div class="col-span-2 md:col-span-1">
+              <span class="font-mono text-xs text-muted">2024</span>
             </div>
-            <div class="p-4 bg-white rounded-xl border border-stone-200/50">
-              <i data-lucide="server" class="w-5 h-5 text-orange-700 mb-2"></i>
-              <div class="text-sm font-medium text-stone-900">Backend</div>
-              <div class="text-xs text-stone-500 mt-0.5">Node.js, Python, Go</div>
+            <div class="col-span-10 md:col-span-5">
+              <h3 class="font-serif text-lg font-bold group-hover:text-accent transition-colors duration-300">Urban Fragments — Solo Exhibition</h3>
+              <p class="text-xs text-muted mt-1">Galeri Nasional Indonesia, Jakarta</p>
             </div>
-            <div class="p-4 bg-white rounded-xl border border-stone-200/50">
-              <i data-lucide="database" class="w-5 h-5 text-orange-700 mb-2"></i>
-              <div class="text-sm font-medium text-stone-900">Database</div>
-              <div class="text-xs text-stone-500 mt-0.5">PostgreSQL, Supabase, Redis</div>
-            </div>
-            <div class="p-4 bg-white rounded-xl border border-stone-200/50">
-              <i data-lucide="cloud" class="w-5 h-5 text-orange-700 mb-2"></i>
-              <div class="text-sm font-medium text-stone-900">DevOps</div>
-              <div class="text-xs text-stone-500 mt-0.5">Vercel, Docker, CI/CD</div>
+            <div class="col-span-12 md:col-span-4 md:col-start-8">
+              <p class="text-xs text-muted leading-relaxed">Pameran tunggal yang mengeksplorasi fragmentasi ruang urban melalui fotografi analog dan digital.</p>
             </div>
           </div>
 
-          <a href="#contact" class="inline-flex items-center gap-2 text-sm font-medium text-orange-700 hover:text-orange-800 transition-colors duration-150">
-            Mari berkolaborasi
-            <i data-lucide="arrow-right" class="w-4 h-4"></i>
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Experience Section -->
-  <section id="experience" class="py-24 px-6 bg-white">
-    <div class="max-w-4xl mx-auto">
-      <div class="text-center mb-16 scroll-reveal opacity-0-init">
-        <span class="inline-block px-3 py-1 bg-orange-50 border border-orange-100 rounded-full text-xs font-medium text-orange-800 mb-4">Pengalaman</span>
-        <h2 class="text-3xl font-semibold text-stone-900 tracking-tight">Perjalanan karier saya</h2>
-      </div>
-
-      <div id="experience-list" class="relative">
-        <!-- Line -->
-        <div class="absolute left-[19px] md:left-1/2 top-0 bottom-0 w-px bg-stone-200 -translate-x-1/2"></div>
-
-        <!-- Fallback static data (akan di-replace oleh Supabase data) -->
-        <div id="experience-fallback">
-          <div class="relative flex flex-col md:flex-row gap-8 mb-12 scroll-reveal opacity-0-init">
-            <div class="md:w-1/2 md:text-right md:pr-12">
-              <div class="text-xs font-medium text-orange-700 mb-1">2022 — Sekarang</div>
-              <h3 class="text-lg font-semibold text-stone-900">Senior Frontend Developer</h3>
-              <div class="text-sm text-stone-500 mb-2">Tech Corp</div>
-              <p class="text-sm text-stone-500 leading-relaxed">Memimpin tim frontend 5 orang, membangun design system dan meningkatkan performa aplikasi hingga 40%</p>
+          <div class="exp-item group py-8 border-b border-ink/20 grid grid-cols-12 gap-4 items-start scroll-reveal op-0 delay-1 hover:bg-ink/[0.02] transition-colors duration-300 px-2 -mx-2">
+            <div class="col-span-2 md:col-span-1">
+              <span class="font-mono text-xs text-muted">2023</span>
             </div>
-            <div class="absolute left-2.5 md:left-1/2 md:-translate-x-1/2 w-4 h-4 bg-orange-700 rounded-full border-4 border-white shadow-sm z-10 mt-1"></div>
-            <div class="md:w-1/2 md:pl-12">
-              <img src="https://picsum.photos/seed/techcorp/80/80.jpg" alt="Tech Corp" class="w-16 h-16 rounded-xl object-cover shadow-sm">
+            <div class="col-span-10 md:col-span-5">
+              <h3 class="font-serif text-lg font-bold group-hover:text-accent transition-colors duration-300">Silent Voices — Group Exhibition</h3>
+              <p class="text-xs text-muted mt-1">ARTJOG 2023, Yogyakarta</p>
+            </div>
+            <div class="col-span-12 md:col-span-4 md:col-start-8">
+              <p class="text-xs text-muted leading-relaxed">Kolaborasi dengan 12 seniman visual dari Asia Tenggara dengan tema narasi yang terpendam.</p>
             </div>
           </div>
 
-          <div class="relative flex flex-col md:flex-row gap-8 mb-12 scroll-reveal opacity-0-init delay-200">
-            <div class="md:w-1/2 md:pr-12 md:order-1 md:text-right">
-              <img src="https://picsum.photos/seed/startup/80/80.jpg" alt="StartupXYZ" class="w-16 h-16 rounded-xl object-cover shadow-sm md:ml-auto">
+          <div class="exp-item group py-8 border-b border-ink/20 grid grid-cols-12 gap-4 items-start scroll-reveal op-0 delay-2 hover:bg-ink/[0.02] transition-colors duration-300 px-2 -mx-2">
+            <div class="col-span-2 md:col-span-1">
+              <span class="font-mono text-xs text-muted">2023</span>
             </div>
-            <div class="absolute left-2.5 md:left-1/2 md:-translate-x-1/2 w-4 h-4 bg-stone-300 rounded-full border-4 border-white shadow-sm z-10 mt-1"></div>
-            <div class="md:w-1/2 md:pl-12 md:order-2">
-              <div class="text-xs font-medium text-orange-700 mb-1">2020 — 2022</div>
-              <h3 class="text-lg font-semibold text-stone-900">Full Stack Developer</h3>
-              <div class="text-sm text-stone-500 mb-2">StartupXYZ</div>
-              <p class="text-sm text-stone-500 leading-relaxed">Mengembangkan platform SaaS dari 0 ke 10K pengguna aktif</p>
+            <div class="col-span-10 md:col-span-5">
+              <h3 class="font-serif text-lg font-bold group-hover:text-accent transition-colors duration-300">Brand Collaboration — Toko Kerja</h3>
+              <p class="text-xs text-muted mt-1">Visual Identity & Merchandise</p>
+            </div>
+            <div class="col-span-12 md:col-span-4 md:col-start-8">
+              <p class="text-xs text-muted leading-relaxed">Desain identitas visual dan merchandise untuk brand lokal berbasis komunitas kreatif.</p>
             </div>
           </div>
 
-          <div class="relative flex flex-col md:flex-row gap-8 scroll-reveal opacity-0-init delay-400">
-            <div class="md:w-1/2 md:text-right md:pr-12">
-              <div class="text-xs font-medium text-orange-700 mb-1">2018 — 2020</div>
-              <h3 class="text-lg font-semibold text-stone-900">Junior Developer</h3>
-              <div class="text-sm text-stone-500 mb-2">Digital Agency</div>
-              <p class="text-sm text-stone-500 leading-relaxed">Membangun 20+ website klien menggunakan berbagai tech stack</p>
+          <div class="exp-item group py-8 border-b border-ink/20 grid grid-cols-12 gap-4 items-start scroll-reveal op-0 delay-3 hover:bg-ink/[0.02] transition-colors duration-300 px-2 -mx-2">
+            <div class="col-span-2 md:col-span-1">
+              <span class="font-mono text-xs text-muted">2022</span>
             </div>
-            <div class="absolute left-2.5 md:left-1/2 md:-translate-x-1/2 w-4 h-4 bg-stone-300 rounded-full border-4 border-white shadow-sm z-10 mt-1"></div>
-            <div class="md:w-1/2 md:pl-12">
-              <img src="https://picsum.photos/seed/agency/80/80.jpg" alt="Digital Agency" class="w-16 h-16 rounded-xl object-cover shadow-sm">
+            <div class="col-span-10 md:col-span-5">
+              <h3 class="font-serif text-lg font-bold group-hover:text-accent transition-colors duration-300">Residency Program — Ruangrupa</h3>
+              <p class="text-xs text-muted mt-1">Jakarta, 3 bulan</p>
+            </div>
+            <div class="col-span-12 md:col-span-4 md:col-start-8">
+              <p class="text-xs text-muted leading-relaxed">Program residensi seni dengan fokus pada seni publik dan partisipasi komunitas.</p>
+            </div>
+          </div>
+
+          <div class="exp-item group py-8 border-b border-ink/20 grid grid-cols-12 gap-4 items-start scroll-reveal op-0 delay-4 hover:bg-ink/[0.02] transition-colors duration-300 px-2 -mx-2">
+            <div class="col-span-2 md:col-span-1">
+              <span class="font-mono text-xs text-muted">2021</span>
+            </div>
+            <div class="col-span-10 md:col-span-5">
+              <h3 class="font-serif text-lg font-bold group-hover:text-accent transition-colors duration-300">Beginnings — First Group Show</h3>
+              <p class="text-xs text-muted mt-1">Komunitas Salihara, Jakarta</p>
+            </div>
+            <div class="col-span-12 md:col-span-4 md:col-start-8">
+              <p class="text-xs text-muted leading-relaxed">Pameran pertama bersama komunitas seniman muda Jakarta dengan 8 karya awal.</p>
             </div>
           </div>
         </div>
 
-        <div id="experience-dynamic" class="hidden"></div>
+        <div id="exp-dynamic" class="hidden"></div>
       </div>
 
-      <!-- Supabase Status -->
-      <div id="supabase-status" class="mt-8 text-center">
-        <span class="inline-flex items-center gap-2 px-3 py-1.5 bg-stone-100 rounded-full text-xs text-stone-500">
-          <span class="w-1.5 h-1.5 bg-stone-400 rounded-full"></span>
-          Menggunakan data statis — hubungkan Supabase untuk data dinamis
+      <div id="supabase-status" class="mt-8 scroll-reveal op-0">
+        <span class="inline-flex items-center gap-2 px-3 py-1.5 bg-ink/5 rounded-none text-[10px] tracking-[0.15em] uppercase text-muted font-semibold">
+          <span class="w-1.5 h-1.5 bg-muted/50 rounded-full"></span>
+          Data statis — hubungkan Supabase
         </span>
       </div>
     </div>
   </section>
 
-  <!-- Projects Section -->
-  <section id="projects" class="py-24 px-6">
-    <div class="max-w-7xl mx-auto">
-      <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-12 scroll-reveal opacity-0-init">
-        <div>
-          <span class="inline-block px-3 py-1 bg-orange-50 border border-orange-100 rounded-full text-xs font-medium text-orange-800 mb-4">Proyek</span>
-          <h2 class="text-3xl font-semibold text-stone-900 tracking-tight">Karya terbaru saya</h2>
-        </div>
-        <div class="flex gap-2 mt-4 md:mt-0">
-          <button onclick="filterProjects('all')" class="filter-btn active px-4 py-2 text-sm font-medium rounded-full border border-stone-200/60 bg-stone-900 text-white transition-all duration-150" data-filter="all">Semua</button>
-          <button onclick="filterProjects('featured')" class="filter-btn px-4 py-2 text-sm font-medium rounded-full border border-stone-200/60 bg-white text-stone-600 hover:bg-stone-50 transition-all duration-150" data-filter="featured">Unggulan</button>
-        </div>
-      </div>
+  <!-- ==================== CONTACT ==================== -->
+  <section id="contact" class="py-20 md:py-32 px-6 md:px-10 bg-ink text-white">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid lg:grid-cols-2 gap-16">
+        
+        <div class="scroll-reveal op-0">
+          <span class="text-[10px] font-bold tracking-[0.3em] uppercase text-white/40 block mb-4">04 — Kontak</span>
+          <h2 class="font-serif text-4xl md:text-5xl font-bold leading-tight mb-6">
+            Mari <span class="italic text-accent">berbicara</span>
+          </h2>
+          <p class="text-sm text-white/50 leading-relaxed max-w-sm mb-10">
+            Terbuka untuk kolaborasi seni, komisi karya, pameran, atau sekadar ngobrol tentang kreativitas.
+          </p>
 
-      <div id="projects-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <!-- Fallback static projects -->
-        <div id="projects-fallback">
-          <div class="project-card group bg-white rounded-2xl border border-stone-200/50 overflow-hidden hover:shadow-md hover:border-stone-300 transition-all duration-300 cursor-pointer">
-            <div class="relative overflow-hidden h-48">
-              <img src="https://picsum.photos/seed/ecommerce/600/400.jpg" alt="E-Commerce Platform" class="project-img w-full h-full object-cover transition-transform duration-500 ease-out">
-              <div class="project-overlay absolute inset-0 bg-stone-900/40 flex items-center justify-center gap-3 opacity-0 transition-opacity duration-300">
-                <a href="#" class="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-orange-50 transition-colors"><i data-lucide="external-link" class="w-4 h-4 text-stone-700"></i></a>
-                <a href="#" class="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-orange-50 transition-colors"><i data-lucide="github" class="w-4 h-4 text-stone-700"></i></a>
-              </div>
-              <div class="absolute top-3 right-3">
-                <span class="px-2.5 py-1 bg-orange-700 text-white text-xs font-medium rounded-full">Unggulan</span>
-              </div>
+          <div class="space-y-6">
+            <div>
+              <div class="text-[10px] tracking-[0.2em] uppercase text-white/30 mb-2">Email</div>
+              <a href="mailto:christopher@example.com" class="text-sm text-white/80 hover:text-accent transition-colors">christopher@example.com</a>
             </div>
-            <div class="p-6">
-              <h3 class="text-lg font-semibold text-stone-900 mb-1.5">E-Commerce Platform</h3>
-              <p class="text-sm text-stone-500 leading-relaxed mb-4">Full-stack e-commerce dengan payment gateway terintegrasi</p>
-              <div class="flex flex-wrap gap-2">
-                <span class="px-2.5 py-1 bg-stone-50 border border-stone-200/50 rounded-md text-xs text-stone-600">Next.js</span>
-                <span class="px-2.5 py-1 bg-stone-50 border border-stone-200/50 rounded-md text-xs text-stone-600">Supabase</span>
-                <span class="px-2.5 py-1 bg-stone-50 border border-stone-200/50 rounded-md text-xs text-stone-600">Stripe</span>
-              </div>
+            <div>
+              <div class="text-[10px] tracking-[0.2em] uppercase text-white/30 mb-2">Instagram</div>
+              <a href="#" class="text-sm text-white/80 hover:text-accent transition-colors">@christopher.padilla</a>
             </div>
-          </div>
-
-          <div class="project-card group bg-white rounded-2xl border border-stone-200/50 overflow-hidden hover:shadow-md hover:border-stone-300 transition-all duration-300 cursor-pointer mt-8">
-            <div class="relative overflow-hidden h-48">
-              <img src="https://picsum.photos/seed/aichat/600/400.jpg" alt="AI Chat Application" class="project-img w-full h-full object-cover transition-transform duration-500 ease-out">
-              <div class="project-overlay absolute inset-0 bg-stone-900/40 flex items-center justify-center gap-3 opacity-0 transition-opacity duration-300">
-                <a href="#" class="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-orange-50 transition-colors"><i data-lucide="external-link" class="w-4 h-4 text-stone-700"></i></a>
-                <a href="#" class="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-orange-50 transition-colors"><i data-lucide="github" class="w-4 h-4 text-stone-700"></i></a>
-              </div>
-              <div class="absolute top-3 right-3">
-                <span class="px-2.5 py-1 bg-orange-700 text-white text-xs font-medium rounded-full">Unggulan</span>
-              </div>
-            </div>
-            <div class="p-6">
-              <h3 class="text-lg font-semibold text-stone-900 mb-1.5">AI Chat Application</h3>
-              <p class="text-sm text-stone-500 leading-relaxed mb-4">Real-time chatbot dengan integrasi OpenAI API</p>
-              <div class="flex flex-wrap gap-2">
-                <span class="px-2.5 py-1 bg-stone-50 border border-stone-200/50 rounded-md text-xs text-stone-600">React</span>
-                <span class="px-2.5 py-1 bg-stone-50 border border-stone-200/50 rounded-md text-xs text-stone-600">Node.js</span>
-                <span class="px-2.5 py-1 bg-stone-50 border border-stone-200/50 rounded-md text-xs text-stone-600">OpenAI</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="project-card group bg-white rounded-2xl border border-stone-200/50 overflow-hidden hover:shadow-md hover:border-stone-300 transition-all duration-300 cursor-pointer mt-8">
-            <div class="relative overflow-hidden h-48">
-              <img src="https://picsum.photos/seed/taskapp/600/400.jpg" alt="Task Management App" class="project-img w-full h-full object-cover transition-transform duration-500 ease-out">
-              <div class="project-overlay absolute inset-0 bg-stone-900/40 flex items-center justify-center gap-3 opacity-0 transition-opacity duration-300">
-                <a href="#" class="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-orange-50 transition-colors"><i data-lucide="external-link" class="w-4 h-4 text-stone-700"></i></a>
-                <a href="#" class="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-orange-50 transition-colors"><i data-lucide="github" class="w-4 h-4 text-stone-700"></i></a>
-              </div>
-            </div>
-            <div class="p-6">
-              <h3 class="text-lg font-semibold text-stone-900 mb-1.5">Task Management App</h3>
-              <p class="text-sm text-stone-500 leading-relaxed mb-4">Kanban board dengan drag & drop dan kolaborasi tim</p>
-              <div class="flex flex-wrap gap-2">
-                <span class="px-2.5 py-1 bg-stone-50 border border-stone-200/50 rounded-md text-xs text-stone-600">Vue.js</span>
-                <span class="px-2.5 py-1 bg-stone-50 border border-stone-200/50 rounded-md text-xs text-stone-600">Firebase</span>
-                <span class="px-2.5 py-1 bg-stone-50 border border-stone-200/50 rounded-md text-xs text-stone-600">Tailwind</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="project-card group bg-white rounded-2xl border border-stone-200/50 overflow-hidden hover:shadow-md hover:border-stone-300 transition-all duration-300 cursor-pointer mt-8">
-            <div class="relative overflow-hidden h-48">
-              <img src="https://picsum.photos/seed/cms/600/400.jpg" alt="Portfolio CMS" class="project-img w-full h-full object-cover transition-transform duration-500 ease-out">
-              <div class="project-overlay absolute inset-0 bg-stone-900/40 flex items-center justify-center gap-3 opacity-0 transition-opacity duration-300">
-                <a href="#" class="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-orange-50 transition-colors"><i data-lucide="external-link" class="w-4 h-4 text-stone-700"></i></a>
-                <a href="#" class="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-orange-50 transition-colors"><i data-lucide="github" class="w-4 h-4 text-stone-700"></i></a>
-              </div>
-              <div class="absolute top-3 right-3">
-                <span class="px-2.5 py-1 bg-orange-700 text-white text-xs font-medium rounded-full">Unggulan</span>
-              </div>
-            </div>
-            <div class="p-6">
-              <h3 class="text-lg font-semibold text-stone-900 mb-1.5">Portfolio CMS</h3>
-              <p class="text-sm text-stone-500 leading-relaxed mb-4">Content management system untuk portfolio dinamis</p>
-              <div class="flex flex-wrap gap-2">
-                <span class="px-2.5 py-1 bg-stone-50 border border-stone-200/50 rounded-md text-xs text-stone-600">SvelteKit</span>
-                <span class="px-2.5 py-1 bg-stone-50 border border-stone-200/50 rounded-md text-xs text-stone-600">Supabase</span>
-                <span class="px-2.5 py-1 bg-stone-50 border border-stone-200/50 rounded-md text-xs text-stone-600">DaisyUI</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="project-card group bg-white rounded-2xl border border-stone-200/50 overflow-hidden hover:shadow-md hover:border-stone-300 transition-all duration-300 cursor-pointer mt-8">
-            <div class="relative overflow-hidden h-48">
-              <img src="https://picsum.photos/seed/weather/600/400.jpg" alt="Weather Dashboard" class="project-img w-full h-full object-cover transition-transform duration-500 ease-out">
-              <div class="project-overlay absolute inset-0 bg-stone-900/40 flex items-center justify-center gap-3 opacity-0 transition-opacity duration-300">
-                <a href="#" class="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-orange-50 transition-colors"><i data-lucide="external-link" class="w-4 h-4 text-stone-700"></i></a>
-                <a href="#" class="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-orange-50 transition-colors"><i data-lucide="github" class="w-4 h-4 text-stone-700"></i></a>
-              </div>
-            </div>
-            <div class="p-6">
-              <h3 class="text-lg font-semibold text-stone-900 mb-1.5">Weather Dashboard</h3>
-              <p class="text-sm text-stone-500 leading-relaxed mb-4">Dashboard cuaca real-time dengan visualisasi data</p>
-              <div class="flex flex-wrap gap-2">
-                <span class="px-2.5 py-1 bg-stone-50 border border-stone-200/50 rounded-md text-xs text-stone-600">React</span>
-                <span class="px-2.5 py-1 bg-stone-50 border border-stone-200/50 rounded-md text-xs text-stone-600">D3.js</span>
-                <span class="px-2.5 py-1 bg-stone-50 border border-stone-200/50 rounded-md text-xs text-stone-600">API</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="project-card group bg-white rounded-2xl border border-stone-200/50 overflow-hidden hover:shadow-md hover:border-stone-300 transition-all duration-300 cursor-pointer mt-8">
-            <div class="relative overflow-hidden h-48">
-              <img src="https://picsum.photos/seed/analytics/600/400.jpg" alt="Social Media Analytics" class="project-img w-full h-full object-cover transition-transform duration-500 ease-out">
-              <div class="project-overlay absolute inset-0 bg-stone-900/40 flex items-center justify-center gap-3 opacity-0 transition-opacity duration-300">
-                <a href="#" class="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-orange-50 transition-colors"><i data-lucide="external-link" class="w-4 h-4 text-stone-700"></i></a>
-                <a href="#" class="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-orange-50 transition-colors"><i data-lucide="github" class="w-4 h-4 text-stone-700"></i></a>
-              </div>
-            </div>
-            <div class="p-6">
-              <h3 class="text-lg font-semibold text-stone-900 mb-1.5">Social Media Analytics</h3>
-              <p class="text-sm text-stone-500 leading-relaxed mb-4">Platform analitik untuk media sosial</p>
-              <div class="flex flex-wrap gap-2">
-                <span class="px-2.5 py-1 bg-stone-50 border border-stone-200/50 rounded-md text-xs text-stone-600">Next.js</span>
-                <span class="px-2.5 py-1 bg-stone-50 border border-stone-200/50 rounded-md text-xs text-stone-600">Python</span>
-                <span class="px-2.5 py-1 bg-stone-50 border border-stone-200/50 rounded-md text-xs text-stone-600">PostgreSQL</span>
-              </div>
+            <div>
+              <div class="text-[10px] tracking-[0.2em] uppercase text-white/30 mb-2">Berdasarkan di</div>
+              <span class="text-sm text-white/80">Jakarta, Indonesia</span>
             </div>
           </div>
         </div>
 
-        <!-- Dynamic projects from Supabase -->
-        <div id="projects-dynamic" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 hidden"></div>
+        <div class="scroll-reveal op-0 delay-2">
+          <form id="contact-form" class="space-y-5">
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="text-[10px] tracking-[0.2em] uppercase text-white/30 block mb-2">Nama</label>
+                <input type="text" id="name" required placeholder="Nama Anda"
+                  class="w-full bg-transparent border-b border-white/20 px-0 py-3 text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-accent transition-colors duration-300">
+              </div>
+              <div>
+                <label class="text-[10px] tracking-[0.2em] uppercase text-white/30 block mb-2">Email</label>
+                <input type="email" id="email" required placeholder="email@anda.com"
+                  class="w-full bg-transparent border-b border-white/20 px-0 py-3 text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-accent transition-colors duration-300">
+              </div>
+            </div>
+            <div>
+              <label class="text-[10px] tracking-[0.2em] uppercase text-white/30 block mb-2">Subjek</label>
+              <input type="text" id="subject" placeholder="Tentang apa?"
+                class="w-full bg-transparent border-b border-white/20 px-0 py-3 text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-accent transition-colors duration-300">
+            </div>
+            <div>
+              <label class="text-[10px] tracking-[0.2em] uppercase text-white/30 block mb-2">Pesan</label>
+              <textarea id="message" rows="4" required placeholder="Ceritakan ide Anda..."
+                class="w-full bg-transparent border-b border-white/20 px-0 py-3 text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-accent transition-colors duration-300 resize-none"></textarea>
+            </div>
+            <button type="submit" id="submit-btn"
+              class="group mt-4 inline-flex items-center gap-3 px-8 py-4 border border-white/30 text-[11px] font-bold tracking-[0.2em] uppercase hover:bg-white hover:text-ink transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed">
+              <span id="submit-text">Kirim Pesan</span>
+              <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" id="submit-icon"></i>
+              <svg id="submit-spinner" class="hidden animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-dasharray="31.4 31.4" stroke-dashoffset="10"></circle>
+              </svg>
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Contact Section -->
-  <section id="contact" class="py-24 px-6 bg-white">
-    <div class="max-w-3xl mx-auto">
-      <div class="text-center mb-12 scroll-reveal opacity-0-init">
-        <span class="inline-block px-3 py-1 bg-orange-50 border border-orange-100 rounded-full text-xs font-medium text-orange-800 mb-4">Kontak</span>
-        <h2 class="text-3xl font-semibold text-stone-900 tracking-tight mb-3">Mari bekerja sama</h2>
-        <p class="text-stone-500 max-w-md mx-auto">Punya proyek menarik? Saya selalu terbuka untuk diskusi dan kolaborasi baru.</p>
-      </div>
-
-      <div class="bg-[#fafaf9] rounded-2xl border border-stone-200/50 p-8 scroll-reveal opacity-0-init delay-200">
-        <form id="contact-form" class="space-y-5">
-          <div class="grid md:grid-cols-2 gap-5">
-            <div>
-              <label for="name" class="block text-sm font-medium text-stone-700 mb-1.5">Nama</label>
-              <input type="text" id="name" name="name" required placeholder="Nama lengkap"
-                class="w-full px-4 py-3 bg-white border border-stone-200/60 rounded-xl text-sm text-stone-800 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-orange-700/20 focus:border-orange-700 transition-all duration-150">
-            </div>
-            <div>
-              <label for="email" class="block text-sm font-medium text-stone-700 mb-1.5">Email</label>
-              <input type="email" id="email" name="email" required placeholder="email@contoh.com"
-                class="w-full px-4 py-3 bg-white border border-stone-200/60 rounded-xl text-sm text-stone-800 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-orange-700/20 focus:border-orange-700 transition-all duration-150">
-            </div>
-          </div>
-          <div>
-            <label for="subject" class="block text-sm font-medium text-stone-700 mb-1.5">Subjek</label>
-            <input type="text" id="subject" name="subject" placeholder="Tentang apa?"
-              class="w-full px-4 py-3 bg-white border border-stone-200/60 rounded-xl text-sm text-stone-800 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-orange-700/20 focus:border-orange-700 transition-all duration-150">
-          </div>
-          <div>
-            <label for="message" class="block text-sm font-medium text-stone-700 mb-1.5">Pesan</label>
-            <textarea id="message" name="message" rows="5" required placeholder="Ceritakan tentang proyek Anda..."
-              class="w-full px-4 py-3 bg-white border border-stone-200/60 rounded-xl text-sm text-stone-800 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-orange-700/20 focus:border-orange-700 transition-all duration-150 resize-none"></textarea>
-          </div>
-
-          <button type="submit" id="submit-btn"
-            class="w-full inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-stone-900 text-white text-sm font-medium rounded-full hover:bg-stone-800 transition-colors duration-150 shadow-lg shadow-stone-900/10 disabled:opacity-50 disabled:cursor-not-allowed">
-            <span id="submit-text">Kirim Pesan</span>
-            <i data-lucide="send" class="w-4 h-4" id="submit-icon"></i>
-            <svg id="submit-spinner" class="hidden animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-dasharray="31.4 31.4" stroke-dashoffset="10"></circle>
-            </svg>
-          </button>
-        </form>
-      </div>
-
-      <!-- Alternative Contact -->
-      <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-6 scroll-reveal opacity-0-init delay-300">
-        <a href="mailto:hello@example.com" class="inline-flex items-center gap-2 text-sm text-stone-500 hover:text-orange-700 transition-colors duration-150">
-          <i data-lucide="mail" class="w-4 h-4"></i>
-          hello@example.com
-        </a>
-        <span class="hidden sm:block w-1 h-1 bg-stone-300 rounded-full"></span>
-        <a href="#" class="inline-flex items-center gap-2 text-sm text-stone-500 hover:text-orange-700 transition-colors duration-150">
-          <i data-lucide="github" class="w-4 h-4"></i>
-          github.com/username
-        </a>
-        <span class="hidden sm:block w-1 h-1 bg-stone-300 rounded-full"></span>
-        <a href="#" class="inline-flex items-center gap-2 text-sm text-stone-500 hover:text-orange-700 transition-colors duration-150">
-          <i data-lucide="linkedin" class="w-4 h-4"></i>
-          LinkedIn
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="py-12 px-6 border-t border-stone-200/50">
-    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-      <div class="flex items-center gap-2">
-        <div class="w-6 h-6 bg-stone-900 rounded-md flex items-center justify-center">
-          <span class="text-white text-xs font-semibold">D</span>
-        </div>
-        <span class="text-sm text-stone-500">© 2025 dev.portfolio. Dibuat dengan ❤️</span>
-      </div>
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="py-10 px-6 md:px-10 border-t border-line">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
       <div class="flex items-center gap-4">
-        <a href="#" class="w-9 h-9 rounded-full bg-stone-100 flex items-center justify-center hover:bg-stone-200 transition-colors duration-150">
-          <i data-lucide="github" class="w-4 h-4 text-stone-600"></i>
+        <span class="font-serif font-bold text-sm">C.P</span>
+        <span class="text-[10px] text-muted tracking-wider">© 2025 Christopher Padilla. All rights reserved.</span>
+      </div>
+      <div class="flex items-center gap-1">
+        <a href="#" class="w-8 h-8 flex items-center justify-center hover:bg-ink/5 transition-colors duration-200">
+          <i data-lucide="instagram" class="w-3.5 h-3.5 text-muted"></i>
         </a>
-        <a href="#" class="w-9 h-9 rounded-full bg-stone-100 flex items-center justify-center hover:bg-stone-200 transition-colors duration-150">
-          <i data-lucide="linkedin" class="w-4 h-4 text-stone-600"></i>
+        <a href="#" class="w-8 h-8 flex items-center justify-center hover:bg-ink/5 transition-colors duration-200">
+          <i data-lucide="twitter" class="w-3.5 h-3.5 text-muted"></i>
         </a>
-        <a href="#" class="w-9 h-9 rounded-full bg-stone-100 flex items-center justify-center hover:bg-stone-200 transition-colors duration-150">
-          <i data-lucide="twitter" class="w-4 h-4 text-stone-600"></i>
+        <a href="#" class="w-8 h-8 flex items-center justify-center hover:bg-ink/5 transition-colors duration-200">
+          <i data-lucide="dribbble" class="w-3.5 h-3.5 text-muted"></i>
         </a>
-        <a href="#" class="w-9 h-9 rounded-full bg-stone-100 flex items-center justify-center hover:bg-stone-200 transition-colors duration-150">
-          <i data-lucide="instagram" class="w-4 h-4 text-stone-600"></i>
+        <a href="#" class="w-8 h-8 flex items-center justify-center hover:bg-ink/5 transition-colors duration-200">
+          <i data-lucide="mail" class="w-3.5 h-3.5 text-muted"></i>
         </a>
       </div>
     </div>
@@ -534,184 +615,129 @@
 
   <!-- Back to Top -->
   <button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})"
-    class="fixed bottom-6 right-6 w-10 h-10 bg-stone-900 text-white rounded-full shadow-lg shadow-stone-900/10 flex items-center justify-center opacity-0 translate-y-4 pointer-events-none transition-all duration-300 hover:bg-stone-800 z-50">
-    <i data-lucide="chevron-up" class="w-5 h-5"></i>
+    class="no-print fixed bottom-6 right-6 w-10 h-10 bg-ink text-white flex items-center justify-center opacity-0 translate-y-4 pointer-events-none transition-all duration-500 hover:bg-accent z-50">
+    <i data-lucide="arrow-up" class="w-4 h-4"></i>
   </button>
+
 
   <script>
     // ============================================
-    // SUPABASE CONFIGURATION
-    // Ganti dengan kredensial Supabase Anda
+    // SUPABASE
     // ============================================
-    const SUPABASE_URL = 'https://sbowhbkaihqlnznzaqkv.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNib3doYmthaWhxbG56bnphcWt2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM1ODQyMzUsImV4cCI6MjA5OTE2MDIzNX0.6GYFzKQiV5Qs5oGcJ1ecumnbw2_nqv_WKHaKQOmNQFE';
+    const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+    let supabase = null, isSupabaseConnected = false, allWorks = [];
 
-    let supabase = null;
-    let isSupabaseConnected = false;
-
-    // Inisialisasi Supabase
     function initSupabase() {
-      if (SUPABASE_URL === 'https://sbowhbkaihqlnznzaqkv.supabase.co' || SUPABASE_ANON_KEY === 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNib3doYmthaWhxbG56bnphcWt2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM1ODQyMzUsImV4cCI6MjA5OTE2MDIzNX0.6GYFzKQiV5Qs5oGcJ1ecumnbw2_nqv_WKHaKQOmNQFE') {
-        console.log('Supabase belum dikonfigurasi. Menggunakan data statis.');
-        updateSupabaseStatus(false);
-        return;
+      if (SUPABASE_URL === 'YOUR_SUPABASE_URL' || !SUPABASE_URL) {
+        updateStatus(false); return;
       }
       try {
         supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         isSupabaseConnected = true;
-        updateSupabaseStatus(true);
+        updateStatus(true);
         loadSupabaseData();
-      } catch (err) {
-        console.error('Gagal menginisialisasi Supabase:', err);
-        updateSupabaseStatus(false);
-      }
+      } catch(e) { updateStatus(false); }
     }
 
-    function updateSupabaseStatus(connected) {
+    function updateStatus(ok) {
       const el = document.getElementById('supabase-status');
       if (!el) return;
-      if (connected) {
-        el.innerHTML = `<span class="inline-flex items-center gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-full text-xs text-green-700"><span class="w-1.5 h-1.5 bg-green-500 rounded-full" style="animation: pulse-dot 2s cubic-bezier(0.4,0,0.6,1) infinite"></span>Terhubung ke Supabase</span>`;
-      } else {
-        el.innerHTML = `<span class="inline-flex items-center gap-2 px-3 py-1.5 bg-stone-100 rounded-full text-xs text-stone-500"><span class="w-1.5 h-1.5 bg-stone-400 rounded-full"></span>Menggunakan data statis — hubungkan Supabase untuk data dinamis</span>`;
-      }
+      el.innerHTML = ok
+        ? `<span class="inline-flex items-center gap-2 px-3 py-1.5 bg-accent/10 rounded-none text-[10px] tracking-[0.15em] uppercase text-accent font-semibold"><span class="w-1.5 h-1.5 bg-accent rounded-full" style="animation:pulse-dot 2s infinite"></span>Terhubung ke Supabase</span>`
+        : `<span class="inline-flex items-center gap-2 px-3 py-1.5 bg-ink/5 rounded-none text-[10px] tracking-[0.15em] uppercase text-muted font-semibold"><span class="w-1.5 h-1.5 bg-muted/50 rounded-full"></span>Data statis — hubungkan Supabase</span>`;
     }
 
-    // Load data dari Supabase
     async function loadSupabaseData() {
-      await loadProjectsFromSupabase();
-      await loadExperiencesFromSupabase();
+      await loadWorks();
+      await loadExperiences();
     }
 
-    async function loadProjectsFromSupabase() {
+    async function loadWorks() {
       try {
-        const { data, error } = await supabase
-          .from('projects')
-          .select('*')
-          .order('created_at', { ascending: false });
-
+        const { data, error } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
         if (error) throw error;
-        if (data && data.length > 0) {
-          document.getElementById('projects-fallback').classList.add('hidden');
-          const container = document.getElementById('projects-dynamic');
-          container.classList.remove('hidden');
-          container.innerHTML = '';
-          window.allProjects = data;
-          renderProjects(data);
+        if (data?.length) {
+          document.getElementById('works-fallback').classList.add('hidden');
+          const c = document.getElementById('works-dynamic');
+          c.classList.remove('hidden');
+          allWorks = data;
+          renderWorks(data);
         }
-      } catch (err) {
-        console.error('Gagal memuat proyek dari Supabase:', err);
-      }
+      } catch(e) { console.error('Works error:', e); }
     }
 
-    async function loadExperiencesFromSupabase() {
+    async function loadExperiences() {
       try {
-        const { data, error } = await supabase
-          .from('experiences')
-          .select('*')
-          .order('created_at', { ascending: true });
-
+        const { data, error } = await supabase.from('experiences').select('*').order('created_at', { ascending: true });
         if (error) throw error;
-        if (data && data.length > 0) {
-          document.getElementById('experience-fallback').classList.add('hidden');
-          const container = document.getElementById('experience-dynamic');
-          container.classList.remove('hidden');
-          container.innerHTML = data.map((exp, i) => {
-            const isEven = i % 2 === 0;
-            return `
-              <div class="relative flex flex-col md:flex-row gap-8 ${i < data.length - 1 ? 'mb-12' : ''} scroll-reveal opacity-0-init">
-                ${isEven ? `
-                  <div class="md:w-1/2 md:text-right md:pr-12">
-                    <div class="text-xs font-medium text-orange-700 mb-1">${exp.period}</div>
-                    <h3 class="text-lg font-semibold text-stone-900">${exp.role}</h3>
-                    <div class="text-sm text-stone-500 mb-2">${exp.company}</div>
-                    <p class="text-sm text-stone-500 leading-relaxed">${exp.description}</p>
-                  </div>
-                  <div class="absolute left-2.5 md:left-1/2 md:-translate-x-1/2 w-4 h-4 ${i === 0 ? 'bg-orange-700' : 'bg-stone-300'} rounded-full border-4 border-white shadow-sm z-10 mt-1"></div>
-                  <div class="md:w-1/2 md:pl-12">
-                    ${exp.logo_url ? `<img src="${exp.logo_url}" alt="${exp.company}" class="w-16 h-16 rounded-xl object-cover shadow-sm">` : ''}
-                  </div>
-                ` : `
-                  <div class="md:w-1/2 md:pr-12 md:order-1 md:text-right">
-                    ${exp.logo_url ? `<img src="${exp.logo_url}" alt="${exp.company}" class="w-16 h-16 rounded-xl object-cover shadow-sm md:ml-auto">` : ''}
-                  </div>
-                  <div class="absolute left-2.5 md:left-1/2 md:-translate-x-1/2 w-4 h-4 bg-stone-300 rounded-full border-4 border-white shadow-sm z-10 mt-1"></div>
-                  <div class="md:w-1/2 md:pl-12 md:order-2">
-                    <div class="text-xs font-medium text-orange-700 mb-1">${exp.period}</div>
-                    <h3 class="text-lg font-semibold text-stone-900">${exp.role}</h3>
-                    <div class="text-sm text-stone-500 mb-2">${exp.company}</div>
-                    <p class="text-sm text-stone-500 leading-relaxed">${exp.description}</p>
-                  </div>
-                `}
+        if (data?.length) {
+          document.getElementById('exp-fallback').classList.add('hidden');
+          const c = document.getElementById('exp-dynamic');
+          c.classList.remove('hidden');
+          c.innerHTML = data.map((exp, i) => {
+            const year = exp.period?.match(/\d{4}/)?.[0] || '';
+            return `<div class="exp-item group py-8 border-b border-ink/20 grid grid-cols-12 gap-4 items-start scroll-reveal op-0 hover:bg-ink/[0.02] transition-colors duration-300 px-2 -mx-2" style="animation-delay:${i*0.1}s">
+              <div class="col-span-2 md:col-span-1"><span class="font-mono text-xs text-muted">${year}</span></div>
+              <div class="col-span-10 md:col-span-5">
+                <h3 class="font-serif text-lg font-bold group-hover:text-accent transition-colors duration-300">${exp.role}</h3>
+                <p class="text-xs text-muted mt-1">${exp.company}</p>
               </div>
-            `;
+              <div class="col-span-12 md:col-span-4 md:col-start-8">
+                <p class="text-xs text-muted leading-relaxed">${exp.description || ''}</p>
+              </div>
+            </div>`;
           }).join('');
-          // Re-observe scroll reveals
-          observeScrollElements();
+          observeScroll();
         }
-      } catch (err) {
-        console.error('Gagal memuat pengalaman dari Supabase:', err);
-      }
+      } catch(e) { console.error('Exp error:', e); }
     }
 
-    // Render proyek (digunakan untuk filter juga)
-    function renderProjects(projects) {
-      const container = isSupabaseConnected ? document.getElementById('projects-dynamic') : document.getElementById('projects-fallback');
-      // Untuk fallback, kita hide/show cards
+    function renderWorks(works) {
       if (!isSupabaseConnected) {
-        const cards = container.querySelectorAll('.project-card');
-        cards.forEach(card => {
-          const isFeatured = card.querySelector('.bg-orange-700');
-          if (currentFilter === 'all') {
-            card.style.display = '';
-          } else if (currentFilter === 'featured') {
-            card.style.display = isFeatured ? '' : 'none';
-          }
+        document.querySelectorAll('.work-item').forEach(item => {
+          const feat = item.dataset.featured === 'true';
+          item.style.display = (currentFilter === 'all' || (currentFilter === 'featured' && feat)) ? '' : 'none';
         });
         return;
       }
-
-      container.innerHTML = projects.map(p => `
-        <div class="project-card group bg-white rounded-2xl border border-stone-200/50 overflow-hidden hover:shadow-md hover:border-stone-300 transition-all duration-300 cursor-pointer" data-featured="${p.featured}">
-          <div class="relative overflow-hidden h-48">
-            <img src="${p.image_url || 'https://picsum.photos/seed/' + p.id + '/600/400.jpg'}" alt="${p.title}" class="project-img w-full h-full object-cover transition-transform duration-500 ease-out">
-            <div class="project-overlay absolute inset-0 bg-stone-900/40 flex items-center justify-center gap-3 opacity-0 transition-opacity duration-300">
-              ${p.live_url ? `<a href="${p.live_url}" target="_blank" class="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-orange-50 transition-colors"><i data-lucide="external-link" class="w-4 h-4 text-stone-700"></i></a>` : ''}
-              ${p.github_url ? `<a href="${p.github_url}" target="_blank" class="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-orange-50 transition-colors"><i data-lucide="github" class="w-4 h-4 text-stone-700"></i></a>` : ''}
-            </div>
-            ${p.featured ? `<div class="absolute top-3 right-3"><span class="px-2.5 py-1 bg-orange-700 text-white text-xs font-medium rounded-full">Unggulan</span></div>` : ''}
-          </div>
-          <div class="p-6">
-            <h3 class="text-lg font-semibold text-stone-900 mb-1.5">${p.title}</h3>
-            <p class="text-sm text-stone-500 leading-relaxed mb-4">${p.description || ''}</p>
-            <div class="flex flex-wrap gap-2">
-              ${(p.tech_stack || []).map(t => `<span class="px-2.5 py-1 bg-stone-50 border border-stone-200/50 rounded-md text-xs text-stone-600">${t}</span>`).join('')}
+      const c = document.getElementById('works-dynamic');
+      c.innerHTML = works.map((w, i) => `
+        <div class="work-item group cursor-pointer" data-featured="${w.featured}">
+          <div class="relative overflow-hidden aspect-[4/3]">
+            <img src="${w.image_url || 'https://picsum.photos/seed/'+w.id+'/800/600.jpg'}" alt="${w.title}" class="work-img w-full h-full object-cover grayscale contrast-110 transition-transform duration-700 ease-out">
+            <div class="work-overlay absolute inset-0 bg-accent/20 opacity-0 transition-opacity duration-500"></div>
+            ${w.featured ? '<div class="absolute top-4 left-4"><span class="stamp text-[9px] py-1 px-2 border-white text-white" style="transform:rotate(-8deg)">Featured</span></div>' : ''}
+            <div class="absolute bottom-4 right-4 w-8 h-8 border border-white/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-white"></i>
             </div>
           </div>
-        </div>
-      `).join('');
+          <div class="mt-4 flex items-start justify-between">
+            <div>
+              <h3 class="work-title font-serif text-lg font-bold tracking-wide transition-all duration-300">${w.title}</h3>
+              <p class="text-[10px] tracking-[0.15em] uppercase text-white/40 mt-1">${(w.tech_stack||[]).join(' — ')} — ${new Date(w.created_at).getFullYear()}</p>
+            </div>
+            <span class="text-[10px] text-white/30 font-mono">0${i+1}</span>
+          </div>
+        </div>`).join('');
       lucide.createIcons();
     }
 
-    // Filter
     let currentFilter = 'all';
-    function filterProjects(filter) {
-      currentFilter = filter;
-      document.querySelectorAll('.filter-btn').forEach(btn => {
-        if (btn.dataset.filter === filter) {
-          btn.classList.add('bg-stone-900', 'text-white', 'border-stone-900');
-          btn.classList.remove('bg-white', 'text-stone-600');
-        } else {
-          btn.classList.remove('bg-stone-900', 'text-white', 'border-stone-900');
-          btn.classList.add('bg-white', 'text-stone-600');
-        }
+    function filterWorks(f) {
+      currentFilter = f;
+      document.querySelectorAll('.filter-btn').forEach(b => {
+        const active = b.dataset.filter === f;
+        b.classList.toggle('bg-white', active);
+        b.classList.toggle('text-ink', active);
+        b.classList.toggle('border-white/30', active);
+        b.classList.toggle('text-white/60', !active);
+        b.classList.toggle('border-white/20', !active);
       });
-
-      if (isSupabaseConnected && window.allProjects) {
-        const filtered = filter === 'all' ? window.allProjects : window.allProjects.filter(p => p.featured);
-        renderProjects(filtered);
+      if (isSupabaseConnected && allWorks.length) {
+        renderWorks(f === 'all' ? allWorks : allWorks.filter(w => w.featured));
       } else {
-        renderProjects([]);
+        renderWorks([]);
       }
     }
 
@@ -721,153 +747,84 @@
     document.getElementById('contact-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = document.getElementById('submit-btn');
-      const text = document.getElementById('submit-text');
-      const icon = document.getElementById('submit-icon');
-      const spinner = document.getElementById('submit-spinner');
+      const txt = document.getElementById('submit-text');
+      const ico = document.getElementById('submit-icon');
+      const spin = document.getElementById('submit-spinner');
+      btn.disabled = true; txt.textContent = 'Mengirim...'; ico.classList.add('hidden'); spin.classList.remove('hidden');
 
-      btn.disabled = true;
-      text.textContent = 'Mengirim...';
-      icon.classList.add('hidden');
-      spinner.classList.remove('hidden');
-
-      const formData = {
+      const data = {
         name: document.getElementById('name').value,
         email: document.getElementById('email').value,
         subject: document.getElementById('subject').value,
         message: document.getElementById('message').value,
       };
 
-      // Kirim ke Supabase jika terhubung
       if (isSupabaseConnected) {
         try {
-          const { error } = await supabase.from('contacts').insert([formData]);
+          const { error } = await supabase.from('contacts').insert([data]);
           if (error) throw error;
-          showToast('Pesan berhasil dikirim! Saya akan segera membalas.', 'success');
+          showToast('Pesan terkirim! Saya akan segera merespons.', 'success');
           e.target.reset();
-        } catch (err) {
-          console.error('Gagal mengirim pesan:', err);
-          showToast('Gagal mengirim pesan. Silakan coba lagi atau hubungi via email.', 'error');
+        } catch(err) {
+          showToast('Gagal mengirim. Coba lagi atau hubungi via email.', 'error');
         }
       } else {
-        // Simulasi pengiriman tanpa Supabase
-        await new Promise(r => setTimeout(r, 1500));
-        console.log('Form data (tanpa Supabase):', formData);
-        showToast('Pesan terkirim (demo)! Hubungkan Supabase untuk pengiriman nyata.', 'success');
+        await new Promise(r => setTimeout(r, 1200));
+        showToast('Terkirim (demo)! Hubungkan Supabase untuk pengiriman nyata.', 'success');
         e.target.reset();
       }
 
-      btn.disabled = false;
-      text.textContent = 'Kirim Pesan';
-      icon.classList.remove('hidden');
-      spinner.classList.add('hidden');
+      btn.disabled = false; txt.textContent = 'Kirim Pesan'; ico.classList.remove('hidden'); spin.classList.add('hidden');
     });
 
     // ============================================
-    // TOAST NOTIFICATIONS
+    // TOAST
     // ============================================
-    function showToast(message, type = 'info') {
-      const container = document.getElementById('toast-container');
-      const toast = document.createElement('div');
-      const colors = {
-        success: 'bg-green-50 border-green-200 text-green-800',
-        error: 'bg-red-50 border-red-200 text-red-800',
-        info: 'bg-blue-50 border-blue-200 text-blue-800',
-      };
-      const icons = {
-        success: 'check-circle',
-        error: 'alert-circle',
-        info: 'info',
-      };
-
-      toast.className = `toast-enter flex items-start gap-3 px-5 py-4 rounded-xl border shadow-lg max-w-sm ${colors[type]}`;
-      toast.innerHTML = `
-        <i data-lucide="${icons[type]}" class="w-5 h-5 mt-0.5 flex-shrink-0"></i>
-        <p class="text-sm font-medium">${message}</p>
-      `;
-      container.appendChild(toast);
-      lucide.createIcons();
-
-      setTimeout(() => {
-        toast.classList.remove('toast-enter');
-        toast.classList.add('toast-exit');
-        setTimeout(() => toast.remove(), 300);
-      }, 4000);
+    function showToast(msg, type='info') {
+      const c = document.getElementById('toast-container');
+      const t = document.createElement('div');
+      const cls = { success:'bg-accent text-white', error:'bg-red-800 text-white', info:'bg-ink text-white' };
+      const icons = { success:'check-circle', error:'alert-circle', info:'info' };
+      t.className = `toast-enter flex items-start gap-3 px-5 py-4 ${cls[type]} max-w-sm`;
+      t.innerHTML = `<i data-lucide="${icons[type]}" class="w-4 h-4 mt-0.5 flex-shrink-0"></i><p class="text-xs font-medium leading-relaxed">${msg}</p>`;
+      c.appendChild(t); lucide.createIcons();
+      setTimeout(() => { t.classList.replace('toast-enter','toast-exit'); setTimeout(() => t.remove(), 300); }, 4000);
     }
 
     // ============================================
     // MOBILE MENU
     // ============================================
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-    let menuOpen = false;
-
-    mobileMenuBtn.addEventListener('click', () => {
-      menuOpen = !menuOpen;
-      mobileMenu.classList.toggle('hidden', !menuOpen);
-    });
-
-    document.querySelectorAll('.mobile-link').forEach(link => {
-      link.addEventListener('click', () => {
-        menuOpen = false;
-        mobileMenu.classList.add('hidden');
-      });
-    });
+    const mBtn = document.getElementById('mobile-menu-btn');
+    const mMenu = document.getElementById('mobile-menu');
+    let mOpen = false;
+    mBtn.addEventListener('click', () => { mOpen = !mOpen; mMenu.classList.toggle('hidden', !mOpen); });
+    document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', () => { mOpen = false; mMenu.classList.add('hidden'); }));
 
     // ============================================
     // SCROLL EFFECTS
     // ============================================
-    // Navbar shadow on scroll
-    const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 10) {
-        navbar.classList.add('shadow-sm');
-      } else {
-        navbar.classList.remove('shadow-sm');
-      }
-
-      // Back to top button
-      const btn = document.getElementById('back-to-top');
-      if (window.scrollY > 500) {
-        btn.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
-        btn.classList.add('opacity-100', 'translate-y-0');
-      } else {
-        btn.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
-        btn.classList.remove('opacity-100', 'translate-y-0');
-      }
-    });
-
-    // Scroll reveal with IntersectionObserver
-    function observeScrollElements() {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate-fade-in-up');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
-      document.querySelectorAll('.scroll-reveal.opacity-0-init').forEach(el => {
-        observer.observe(el);
-      });
+    function observeScroll() {
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('anim-fade-up'); obs.unobserve(e.target); } });
+      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+      document.querySelectorAll('.scroll-reveal.op-0').forEach(el => obs.observe(el));
     }
 
-    // Active nav link
-    const sections = document.querySelectorAll('section[id]');
+    // Active nav
     window.addEventListener('scroll', () => {
-      let current = '';
-      sections.forEach(section => {
-        const top = section.offsetTop - 100;
-        if (scrollY >= top) current = section.getAttribute('id');
+      const sections = document.querySelectorAll('section[id]');
+      let cur = '';
+      sections.forEach(s => { if (scrollY >= s.offsetTop - 120) cur = s.id; });
+      document.querySelectorAll('.nav-link').forEach(l => {
+        const match = l.getAttribute('href') === '#' + cur;
+        l.classList.toggle('text-ink', match);
+        l.classList.toggle('text-muted', !match);
       });
-      document.querySelectorAll('nav a[href^="#"]').forEach(link => {
-        link.classList.remove('text-orange-800');
-        link.classList.add('text-stone-500');
-        if (link.getAttribute('href') === '#' + current) {
-          link.classList.add('text-orange-800');
-          link.classList.remove('text-stone-500');
-        }
-      });
+
+      // Back to top
+      const btt = document.getElementById('back-to-top');
+      if (scrollY > 600) { btt.classList.remove('opacity-0','translate-y-4','pointer-events-none'); btt.classList.add('opacity-100','translate-y-0'); }
+      else { btt.classList.add('opacity-0','translate-y-4','pointer-events-none'); btt.classList.remove('opacity-100','translate-y-0'); }
     });
 
     // ============================================
@@ -875,7 +832,7 @@
     // ============================================
     document.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
-      observeScrollElements();
+      observeScroll();
       initSupabase();
     });
   </script>
