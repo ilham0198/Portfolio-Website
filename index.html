@@ -1,840 +1,432 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Christopher Padilla — Visual Artist</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            serif: ['Playfair Display', 'serif'],
-          },
-          colors: {
-            paper: '#f5f0eb',
-            ink: '#1a1a1a',
-            muted: '#6b6b6b',
-            accent: '#c23616',
-            line: '#d4cdc5',
-          }
-        }
-      }
-    }
-  </script>
-  <style>
-    ::selection { background: #c23616; color: #fff; }
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: #f5f0eb; }
-    ::-webkit-scrollbar-thumb { background: #1a1a1a; border-radius: 2px; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Christopher Padilla — Visual Artist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#eeece4;
+    --paper-2:#e6e3d8;
+    --ink:#1b1b18;
+    --ink-soft:#4a473f;
+    --grey:#8b8778;
+    --pencil-blue:#4f5f8a;
+    --pencil-green:#4c6b45;
+    --stamp-red:#a13d2f;
+    --line:#c9c5b6;
+    --mono: 'Courier Prime', monospace;
+    --hand: 'Caveat', cursive;
+    --disp: 'Space Grotesk', sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--mono);
+    background-image:
+      radial-gradient(circle at 15% 20%, rgba(0,0,0,0.02), transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(0,0,0,0.025), transparent 45%);
+  }
+  ::selection{background:var(--pencil-green); color:var(--paper);}
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(40px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    @keyframes slideRight {
-      from { opacity: 0; transform: translateX(-30px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-    @keyframes drawLine {
-      from { width: 0; }
-      to { width: 100%; }
-    }
-    @keyframes stampIn {
-      0% { opacity: 0; transform: scale(2) rotate(-15deg); }
-      60% { opacity: 1; transform: scale(0.9) rotate(-12deg); }
-      100% { opacity: 1; transform: scale(1) rotate(-12deg); }
-    }
-    @keyframes grain {
-      0%, 100% { transform: translate(0,0); }
-      10% { transform: translate(-5%,-10%); }
-      30% { transform: translate(3%,-15%); }
-      50% { transform: translate(12%,9%); }
-      70% { transform: translate(9%,4%); }
-      90% { transform: translate(-1%,7%); }
-    }
+  /* faint scribble background lines like the reference */
+  .scribbles{
+    position:absolute; top:-60px; left:0; pointer-events:none; z-index:0;
+    width:100%; height:620px; overflow:visible;
+  }
 
-    .anim-fade-up { animation: fadeUp 0.8s ease-out forwards; }
-    .anim-fade-in { animation: fadeIn 0.6s ease-out forwards; }
-    .anim-slide-right { animation: slideRight 0.7s ease-out forwards; }
-    .anim-stamp { animation: stampIn 0.5s ease-out forwards; }
-    .delay-1 { animation-delay: 0.15s; }
-    .delay-2 { animation-delay: 0.3s; }
-    .delay-3 { animation-delay: 0.45s; }
-    .delay-4 { animation-delay: 0.6s; }
-    .delay-5 { animation-delay: 0.75s; }
-    .delay-6 { animation-delay: 0.9s; }
-    .op-0 { opacity: 0; }
+  a{color:inherit;}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 28px; position:relative; z-index:1;}
+  section.dossier.wrap{max-width:1200px; padding:40px 0 0;}
 
-    .grain-overlay::before {
-      content: '';
-      position: fixed;
-      top: -50%; left: -50%;
-      width: 200%; height: 200%;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 9999;
-      animation: grain 8s steps(10) infinite;
-    }
+  header.nav{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:22px 28px; border-bottom:1px solid var(--line);
+    position:sticky; top:0; background:rgba(238,236,228,.92);
+    backdrop-filter:blur(4px); z-index:50;
+  }
+  .nav .id{
+    font-family:var(--disp); font-weight:700; letter-spacing:.02em; font-size:15px;
+  }
+  .nav .id span{color:var(--grey); font-weight:400; font-family:var(--mono); font-size:12px;}
+  .nav nav a{
+    font-size:12px; text-transform:uppercase; letter-spacing:.08em; margin-left:22px;
+    text-decoration:none; color:var(--ink-soft); border-bottom:1px solid transparent;
+  }
+  .nav nav a:hover{border-color:var(--ink-soft);}
 
-    .hand-underline {
-      background-image: url("data:image/svg+xml,%3Csvg width='200' height='12' viewBox='0 0 200 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 8C30 3 70 2 100 5C130 8 170 4 198 6' stroke='%23c23616' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: bottom;
-      background-size: 100% 12px;
-      padding-bottom: 8px;
-    }
+  /* ===== HERO / DOSSIER ===== */
+  .dossier{
+    position:relative;
+    width:100%;
+    max-width:1200px;
+    aspect-ratio:1/1;
+    margin:0 auto;
+    background:var(--paper);
+    overflow:hidden;
+  }
+  .dossier-inner{ position:absolute; inset:0; }
 
-    .stamp {
-      border: 3px solid #c23616;
-      color: #c23616;
-      padding: 6px 14px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      transform: rotate(-12deg);
-      display: inline-block;
-    }
+  .scribbles{ position:absolute; inset:0; pointer-events:none; z-index:0; }
 
-    .work-item:hover .work-img { transform: scale(1.03); }
-    .work-item:hover .work-overlay { opacity: 1; }
-    .work-item:hover .work-title { letter-spacing: 0.15em; }
+  .doc-label{
+    position:absolute; left:41%; top:20.5%;
+    font-family:var(--hand); font-size:1.7vw; color:var(--ink);
+    transform:rotate(-2deg); white-space:nowrap;
+  }
+  .doc-label::before{ content:"↗"; margin-right:5px; }
 
-    .divider-line {
-      height: 1px;
-      background: #d4cdc5;
-      position: relative;
-    }
-    .divider-line::after {
-      content: '';
-      position: absolute;
-      left: 0; top: 0;
-      height: 1px;
-      background: #1a1a1a;
-      animation: drawLine 1.2s ease-out forwards;
-    }
+  .ruler-mark{
+    position:absolute; left:16.5%; top:28.3%;
+    font-size:.8vw; color:var(--ink);
+  }
+  .ruler-mark .rline{
+    display:inline-block; width:6.5vw; height:1px; background:var(--ink);
+    position:relative; margin-left:4px; vertical-align:middle;
+  }
+  .ruler-mark .rline::before,.ruler-mark .rline::after{
+    content:""; position:absolute; top:-4px; width:1px; height:9px; background:var(--ink);
+  }
+  .ruler-mark .rline::before{left:0;} .ruler-mark .rline::after{right:0;}
 
-    .toast-enter { animation: fadeUp 0.4s ease-out forwards; }
-    .toast-exit { animation: fadeUp 0.3s ease-in reverse forwards; }
+  .meta-box-group{
+    position:absolute; left:32%; top:27.3%;
+    display:flex; align-items:center; font-size:.8vw; color:var(--ink); gap:0;
+  }
+  .meta-box-group .b{ border:1.5px solid var(--ink); padding:2px 6px; font-weight:700; background:var(--paper);}
+  .meta-box-group .tick{width:1.6vw; height:1px; background:var(--ink); position:relative;}
+  .meta-box-group .tick::before{content:"";position:absolute; left:0; top:-4px; width:1px; height:9px; background:var(--ink);}
 
-    @media print {
-      .no-print { display: none !important; }
-    }
-  </style>
+  .photo-01{ position:absolute; left:16.5%; top:30%; font-size:.75vw; color:var(--ink-soft);}
+  .photo-dots{ position:absolute; left:2%; top:50%; font-size:.8vw; letter-spacing:3px; color:var(--ink-soft);}
+
+  .strip-l{
+    position:absolute; left:0%; top:29%; width:16.5%; height:44%;
+    background:#c9c6b9; overflow:hidden;
+  }
+  .strip-l img{ width:100%; height:100%; object-fit:cover; filter:grayscale(1) contrast(1.1); opacity:.55; }
+
+  .strip-r{
+    position:absolute; right:0%; top:29%; width:17%; height:44%;
+    background:#c9c6b9; overflow:hidden;
+  }
+  .strip-r img{ width:100%; height:100%; object-fit:cover; filter:grayscale(1) contrast(1.1); opacity:.55; }
+  .strip-r .tick{ position:absolute; top:8px; right:8px; font-size:.75vw; color:var(--ink-soft);}
+
+  .portrait-frame{
+    position:absolute; left:31%; top:29%; width:37%; height:44%;
+    border:1px solid var(--ink); background:#cfcdc2; overflow:hidden;
+  }
+  .portrait-frame img{ width:100%; height:100%; object-fit:cover; display:block; filter:grayscale(1) contrast(1.15) brightness(.97); }
+  .portrait-frame .placeholder-note{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    text-align:center; font-size:.85vw; color:var(--ink-soft); padding:16px; line-height:1.6;
+    background:repeating-linear-gradient(135deg, #cfcdc2 0 10px, #c4c1b4 10px 20px);
+  }
+
+  .annot-doc{
+    position:absolute; left:54%; top:49.5%; width:20%;
+    font-family:var(--hand); font-size:1.35vw; line-height:1.4; color:var(--ink);
+  }
+  .annot-contact{
+    position:absolute; left:68%; top:59.5%; width:22%;
+    font-family:var(--mono); font-size:.72vw; line-height:1.7; color:var(--ink-soft);
+  }
+  .annot-contact .k{ text-transform:uppercase; font-weight:700; color:var(--ink); }
+
+  .side-note{
+    position:absolute; left:1%; top:73%; width:15%;
+    font-family:var(--mono); font-size:.68vw; line-height:1.6; color:var(--ink-soft);
+  }
+
+  .arrow-curve{
+    position:absolute; left:27%; top:75%;
+    font-family:var(--hand); font-size:2.6vw; color:var(--ink); transform:rotate(15deg) scaleX(-1);
+  }
+
+  .name-tag{
+    position:absolute; left:32%; top:76.5%;
+    background:var(--paper); padding:3px 14px 5px 8px;
+    font-family:var(--disp); font-weight:700; font-size:1.9vw; letter-spacing:.005em;
+    border-bottom:2px solid var(--ink);
+  }
+  .role-line{
+    position:absolute; left:32%; top:81.7%;
+    font-size:1.05vw; color:var(--ink); font-family:var(--mono);
+  }
+  .role-line .circled{
+    border:1.4px solid var(--ink); border-radius:50%; padding:0 5px;
+  }
+  .role-line .org{ display:block; margin-top:2px; }
+
+  .sig-block{
+    position:absolute; left:57%; top:87%; text-align:right;
+  }
+  .sig-block .mark{ font-family:var(--hand); font-size:2.2vw; color:var(--ink); transform:rotate(-2deg); display:block;}
+  .sig-block .cap{ font-size:.72vw; color:var(--ink-soft); font-style:italic; }
+
+  @media (max-width:760px){
+    .dossier{aspect-ratio:auto; min-height:820px;}
+    .doc-label,.role-line,.name-tag,.annot-doc,.annot-contact,.side-note,.sig-block .cap{font-size:12px;}
+    .name-tag{font-size:20px;}
+    .sig-block .mark{font-size:26px;}
+  }
+
+  /* ===== SECTION HEADERS ===== */
+  .sect{padding:70px 0;}
+  .sect + .sect{border-top:1px solid var(--line);}
+  .sect-head{
+    display:flex; align-items:baseline; gap:14px; margin-bottom:36px;
+  }
+  .sect-head .no{font-size:12px; color:var(--grey); border:1px solid var(--line); padding:2px 7px;}
+  .sect-head h2{
+    font-family:var(--disp); font-size:28px; margin:0; text-transform:uppercase; letter-spacing:.02em;
+  }
+
+  /* ===== ABOUT ===== */
+  .about-grid{display:grid; grid-template-columns:1.3fr 1fr; gap:50px;}
+  .about-grid p{font-size:14px; line-height:1.9; color:var(--ink-soft); margin:0 0 16px;}
+  .field{
+    display:flex; justify-content:space-between; padding:9px 0; border-bottom:1px dashed var(--line);
+    font-size:12.5px;
+  }
+  .field .k{color:var(--grey); text-transform:uppercase; letter-spacing:.05em;}
+  .field .v{font-weight:700;}
+  @media (max-width:800px){.about-grid{grid-template-columns:1fr;}}
+
+  /* ===== WORK / PROJECTS (Supabase-driven) ===== */
+  .grid-work{display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:22px;}
+  .card{
+    border:1px solid var(--ink); background:var(--paper-2); position:relative;
+    padding:16px 16px 18px; min-height:210px; display:flex; flex-direction:column;
+  }
+  .card .tag{
+    position:absolute; top:-11px; left:14px; background:var(--paper); border:1px solid var(--ink);
+    font-size:10px; padding:1px 7px; letter-spacing:.05em;
+  }
+  .card .thumb{
+    width:100%; aspect-ratio:4/3; background:#c7c4b8; margin-bottom:12px;
+    filter:grayscale(1) contrast(1.05);
+    background-size:cover; background-position:center;
+  }
+  .card h3{font-family:var(--disp); font-size:16px; margin:0 0 6px;}
+  .card p{font-size:12px; color:var(--ink-soft); line-height:1.6; margin:0; flex:1;}
+  .card .yr{font-size:11px; color:var(--grey); margin-top:10px;}
+  .state-msg{font-size:12.5px; color:var(--grey); font-style:italic;}
+
+  /* ===== CONTACT ===== */
+  .contact-box{
+    border:1px solid var(--ink); padding:28px; background:var(--paper-2);
+    display:grid; grid-template-columns:1fr 1fr; gap:24px;
+  }
+  .contact-box .line{font-size:13px; margin-bottom:12px;}
+  .contact-box .line .k{color:var(--grey); text-transform:uppercase; font-size:10.5px; letter-spacing:.06em; display:block; margin-bottom:2px;}
+  form.cf{display:flex; flex-direction:column; gap:10px;}
+  form.cf input, form.cf textarea{
+    background:transparent; border:none; border-bottom:1px solid var(--ink);
+    font-family:var(--mono); font-size:13px; padding:8px 2px; color:var(--ink);
+  }
+  form.cf input:focus, form.cf textarea:focus{outline:none; border-color:var(--pencil-blue);}
+  form.cf button{
+    align-self:flex-start; margin-top:6px; background:var(--ink); color:var(--paper);
+    border:none; padding:10px 20px; font-family:var(--mono); font-size:12px; letter-spacing:.05em;
+    cursor:pointer; text-transform:uppercase;
+  }
+  form.cf button:hover{background:var(--pencil-green);}
+  @media (max-width:800px){.contact-box{grid-template-columns:1fr;}}
+
+  footer{
+    padding:26px 28px; text-align:center; font-size:11px; color:var(--grey);
+    border-top:1px solid var(--line);
+  }
+
+  .warn{
+    position:absolute; bottom:-58px; left:0; font-size:10.5px; color:var(--ink-soft);
+    max-width:220px; line-height:1.5; transform:rotate(-1deg);
+  }
+  @media (max-width:900px){ .warn{position:static; margin-top:20px;} }
+</style>
 </head>
-<body class="bg-paper text-ink font-sans antialiased grain-overlay">
+<body>
 
-  <!-- Toast Container -->
-  <div id="toast-container" class="fixed top-6 right-6 z-[1000] flex flex-col gap-3"></div>
-
-  <!-- Navigation -->
-  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-paper/90 backdrop-blur-sm border-b border-line transition-all duration-500">
-    <div class="max-w-6xl mx-auto px-6 md:px-10 h-14 flex items-center justify-between">
-      <a href="#hero" class="font-serif font-bold text-lg tracking-tight">C.P</a>
-
-      <div class="hidden md:flex items-center gap-10">
-        <a href="#about" class="nav-link text-[11px] font-semibold tracking-[0.2em] uppercase text-muted hover:text-ink transition-colors duration-300">Tentang</a>
-        <a href="#works" class="nav-link text-[11px] font-semibold tracking-[0.2em] uppercase text-muted hover:text-ink transition-colors duration-300">Karya</a>
-        <a href="#experience" class="nav-link text-[11px] font-semibold tracking-[0.2em] uppercase text-muted hover:text-ink transition-colors duration-300">Pengalaman</a>
-        <a href="#contact" class="nav-link text-[11px] font-semibold tracking-[0.2em] uppercase text-muted hover:text-ink transition-colors duration-300">Kontak</a>
-      </div>
-
-      <button id="mobile-menu-btn" class="md:hidden p-2 hover:bg-ink/5 rounded transition-colors">
-        <i data-lucide="menu" class="w-4 h-4"></i>
-      </button>
-    </div>
-
-    <!-- Mobile Menu -->
-    <div id="mobile-menu" class="md:hidden hidden border-t border-line bg-paper/95 backdrop-blur-sm">
-      <div class="px-6 py-6 flex flex-col gap-4">
-        <a href="#about" class="mobile-link text-sm font-semibold tracking-[0.15em] uppercase text-muted">Tentang</a>
-        <a href="#works" class="mobile-link text-sm font-semibold tracking-[0.15em] uppercase text-muted">Karya</a>
-        <a href="#experience" class="mobile-link text-sm font-semibold tracking-[0.15em] uppercase text-muted">Pengalaman</a>
-        <a href="#contact" class="mobile-link text-sm font-semibold tracking-[0.15em] uppercase text-muted">Kontak</a>
-      </div>
-    </div>
+<header class="nav">
+  <div class="id">CHRISTOPHER PADILLA <span>/ Visual Artist / est. 2021</span></div>
+  <nav>
+    <a href="#about">Tentang</a>
+    <a href="#work">Karya</a>
+    <a href="#contact">Kontak</a>
   </nav>
+</header>
 
-  <!-- ==================== HERO ==================== -->
-  <section id="hero" class="min-h-screen flex items-end pb-12 md:pb-20 px-6 md:px-10 pt-14">
-    <div class="max-w-6xl mx-auto w-full">
-      <div class="grid lg:grid-cols-5 gap-10 lg:gap-16 items-end">
-        
-        <!-- Left: Photo -->
-        <div class="lg:col-span-2 op-0 anim-fade-up">
-          <div class="relative">
-            <div class="aspect-[3/4] bg-line overflow-hidden">
-              <img src="https://picsum.photos/seed/artistportrait/600/800.jpg" alt="Portrait" class="w-full h-full object-cover grayscale contrast-125 mix-blend-multiply">
-            </div>
-            <!-- Handwritten annotation -->
-            <div class="absolute -bottom-4 -right-2 md:-right-6 bg-paper px-3 py-1">
-              <span class="font-serif italic text-sm text-muted">Damaso y Pbo de Ig.</span>
-            </div>
-            <!-- Corner mark -->
-            <div class="absolute top-3 left-3 w-6 h-6 border-t-2 border-l-2 border-ink/30"></div>
-            <div class="absolute bottom-3 right-3 w-6 h-6 border-b-2 border-r-2 border-ink/30"></div>
-          </div>
-        </div>
+<section class="dossier wrap">
+ <div class="dossier-inner">
 
-        <!-- Right: Text -->
-        <div class="lg:col-span-3">
-          <div class="op-0 anim-fade-up delay-1">
-            <div class="flex items-center gap-3 mb-6">
-              <div class="w-8 h-px bg-ink"></div>
-              <span class="text-[10px] font-bold tracking-[0.3em] uppercase text-muted">Portfolio 2025</span>
-            </div>
-          </div>
+  <svg class="scribbles" viewBox="0 0 1200 1200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M60,60 C90,140 40,200 70,280 C95,340 60,400 80,480 C95,530 70,570 90,610" fill="none" stroke="#4f5f8a" stroke-width="1.6" opacity="0.4"/>
+    <path d="M480,60 C500,110 470,140 495,190 C515,230 485,260 500,300 C512,330 495,350 505,380" fill="none" stroke="#5c8a4f" stroke-width="1.6" opacity="0.45"/>
+    <path d="M520,55 C535,85 515,105 530,135 C540,155 525,170 535,190" fill="none" stroke="#5c8a4f" stroke-width="1.4" opacity="0.4"/>
+    <path d="M830,90 C860,130 815,170 850,210 C875,240 835,270 860,305" fill="none" stroke="#4f5f8a" stroke-width="1.4" opacity="0.3"/>
+    <path d="M770,60 C790,85 760,100 780,125" fill="none" stroke="#c98a3e" stroke-width="1.3" opacity="0.4"/>
+    <path d="M30,470 C55,500 20,520 45,545" fill="none" stroke="#c98a3e" stroke-width="1.2" opacity="0.35"/>
+  </svg>
 
-          <h1 class="op-0 anim-fade-up delay-2">
-            <span class="block font-serif text-5xl md:text-7xl lg:text-8xl font-bold leading-[0.9] tracking-tight">Chris-</span>
-            <span class="block font-serif text-5xl md:text-7xl lg:text-8xl font-bold leading-[0.9] tracking-tight">topher</span>
-            <span class="block font-serif text-5xl md:text-7xl lg:text-8xl font-bold leading-[0.9] tracking-tight italic text-accent">Padilla</span>
-          </h1>
+  <div class="ruler-mark">1<span class="rline"></span></div>
+  <div class="doc-label">Dimensión y Peso de Imagen.</div>
 
-          <div class="mt-8 op-0 anim-fade-up delay-3">
-            <p class="text-[11px] font-bold tracking-[0.25em] uppercase text-muted mb-4">Visual Artist — since 2021</p>
-            <div class="w-full h-px bg-line mb-6"></div>
-            <p class="text-sm text-muted leading-relaxed max-w-md">
-              Menciptakan karya visual yang bercerita. Menggabungkan fotografi, ilustrasi digital, dan desain grafis menjadi satu narasi yang kuat dan autentik.
-            </p>
-          </div>
+  <div class="meta-box-group">
+    <span class="b">1072 × 1290</span>
+    <span class="tick"></span>
+    <span class="b">(217KB)</span>
+  </div>
 
-          <div class="mt-8 flex items-center gap-6 op-0 anim-fade-up delay-4">
-            <a href="#works" class="group inline-flex items-center gap-3 text-[11px] font-bold tracking-[0.2em] uppercase hover:text-accent transition-colors duration-300">
-              Lihat Karya
-              <i data-lucide="arrow-down-right" class="w-4 h-4 group-hover:translate-x-1 group-hover:translate-y-1 transition-transform duration-300"></i>
-            </a>
-            <div class="stamp op-0 anim-stamp delay-5">Available</div>
-          </div>
-        </div>
-      </div>
+  <span class="photo-01">01.</span>
+  <span class="photo-dots">::&nbsp;&nbsp;·&nbsp;&nbsp;—&nbsp;&nbsp;1</span>
 
-      <!-- Scroll indicator -->
-      <div class="hidden lg:flex justify-end mt-16 op-0 anim-fade-in delay-6">
-        <div class="flex flex-col items-center gap-2 text-muted">
-          <span class="text-[9px] tracking-[0.3em] uppercase font-semibold" style="writing-mode: vertical-lr;">Scroll</span>
-          <div class="w-px h-10 bg-line relative overflow-hidden">
-            <div class="w-full h-1/2 bg-ink absolute top-0 animate-bounce"></div>
-          </div>
-        </div>
-      </div>
+  <div class="strip-l"><img src="portrait.jpg" alt="" onerror="this.remove()"></div>
+
+  <div class="portrait-frame" id="portraitFrame">
+    <!-- Replace the src below with your own portrait, e.g. portrait.jpg -->
+    <img src="C:\Users\ilham\portfolio-website\IMG_1056.jpeg" alt="Ilham" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+    <div class="placeholder-note" style="display:none;">
+      Letakkan foto Anda di sini<br>(portrait.jpg — rasio ±4:5)
     </div>
-  </section>
+  </div>
 
-  <!-- ==================== ABOUT ==================== -->
-  <section id="about" class="py-20 md:py-32 px-6 md:px-10">
-    <div class="max-w-6xl mx-auto">
-      <div class="grid lg:grid-cols-2 gap-16 items-start">
-        
-        <div class="scroll-reveal op-0">
-          <span class="text-[10px] font-bold tracking-[0.3em] uppercase text-muted block mb-4">01 — Tentang</span>
-          <h2 class="font-serif text-3xl md:text-4xl font-bold leading-tight mb-2">
-            Seni adalah <span class="hand-underline">bahasa</span> yang saya gunakan
-          </h2>
-          <div class="w-16 h-px bg-accent mt-6"></div>
-        </div>
+  <div class="strip-r"><span class="tick">7↦</span><img src="portrait.jpg" alt="" onerror="this.remove()"></div>
 
-        <div class="scroll-reveal op-0 delay-2">
-          <p class="text-sm text-muted leading-[1.8] mb-6">
-            Saya adalah seorang seniman visual berbasis di Indonesia yang fokus pada penciptaan karya yang memadukan elemen fotografi dokumenter dengan ilustrasi digital. Setiap karya saya lahir dari observasi mendalam terhadap kehidupan sehari-hari — percakapan, tekstur kota, dan momen-momen yang sering terlewatkan.
-          </p>
-          <p class="text-sm text-muted leading-[1.8] mb-8">
-            Sejak 2021, saya telah berkolaborasi dengan berbagai brand, majalah, dan komunitas kreatif untuk menghadirkan visual yang tidak hanya indah secara estetika, tetapi juga menyentuh secara emosional.
-          </p>
+  <div class="annot-doc">Fotografía núm.<br>79081916. —</div>
+  <div class="annot-contact">
+    D01F-43FF-8238-3D63D<br>BA6081-2.<br><br>
+    <span class="k">Contact:</span> hello@christopherpadilla.dev<br>
+    +62 838 7841 290<br>
+    Bandung, ID.
+  </div>
 
-          <div class="grid grid-cols-3 gap-6 pt-6 border-t border-line">
-            <div>
-              <div class="font-serif text-3xl font-bold">20+</div>
-              <div class="text-[10px] tracking-[0.2em] uppercase text-muted mt-1">Pameran</div>
-            </div>
-            <div>
-              <div class="font-serif text-3xl font-bold">50+</div>
-              <div class="text-[10px] tracking-[0.2em] uppercase text-muted mt-1">Karya</div>
-            </div>
-            <div>
-              <div class="font-serif text-3xl font-bold">4</div>
-              <div class="text-[10px] tracking-[0.2em] uppercase text-muted mt-1">Tahun</div>
-            </div>
-          </div>
-        </div>
-      </div>
+  <div class="side-note">please do not share<br>or reuse without<br>credit&nbsp;·&nbsp;·&nbsp;·</div>
 
-      <!-- Skills / Tools -->
-      <div class="mt-20 grid grid-cols-2 md:grid-cols-4 gap-px bg-line scroll-reveal op-0 delay-3">
-        <div class="bg-paper p-6 hover:bg-ink/5 transition-colors duration-300 group">
-          <i data-lucide="camera" class="w-5 h-5 text-accent mb-3"></i>
-          <div class="text-xs font-bold tracking-[0.15em] uppercase">Fotografi</div>
-          <div class="text-[10px] text-muted mt-1">Digital & Analog</div>
-        </div>
-        <div class="bg-paper p-6 hover:bg-ink/5 transition-colors duration-300 group">
-          <i data-lucide="pen-tool" class="w-5 h-5 text-accent mb-3"></i>
-          <div class="text-xs font-bold tracking-[0.15em] uppercase">Ilustrasi</div>
-          <div class="text-[10px] text-muted mt-1">Digital Art</div>
-        </div>
-        <div class="bg-paper p-6 hover:bg-ink/5 transition-colors duration-300 group">
-          <i data-lucide="layers" class="w-5 h-5 text-accent mb-3"></i>
-          <div class="text-xs font-bold tracking-[0.15em] uppercase">Grafis</div>
-          <div class="text-[10px] text-muted mt-1">Poster & Branding</div>
-        </div>
-        <div class="bg-paper p-6 hover:bg-ink/5 transition-colors duration-300 group">
-          <i data-lucide="film" class="w-5 h-5 text-accent mb-3"></i>
-          <div class="text-xs font-bold tracking-[0.15em] uppercase">Motion</div>
-          <div class="text-[10px] text-muted mt-1">Video Art</div>
-        </div>
-      </div>
+  <div class="arrow-curve">↶</div>
+
+  <div class="name-tag">CHRISTOPHER PADILLA</div>
+  <div class="role-line">
+    Visual Artist since (dos mil ventiuno) <span class="circled">2021</span>
+    <span class="org">NCA</span>
+  </div>
+
+  <div class="sig-block">
+    <span class="mark">Ch. Padilla</span>
+    <span class="cap">08:46 — (self portrait file.)</span>
+  </div>
+
+ </div>
+</section>
+
+<section class="sect wrap" id="about">
+  <div class="sect-head"><span class="no">01</span><h2>Tentang</h2></div>
+  <div class="about-grid">
+    <div>
+      <p>Christopher Padilla adalah seniman visual yang berbasis riset arsip, dokumen resmi, dan estetika berkas kasus. Karyanya mengumpulkan potongan gambar, catatan tangan, dan cap birokrasi menjadi komposisi baru yang mempertanyakan cara identitas didokumentasikan dan diarsipkan.</p>
+      <p>Sejak 2021, praktiknya telah berkembang dari kolase digital menuju instalasi campuran yang menggabungkan fotografi, tipografi mesin ketik, dan material kertas ditemukan.</p>
     </div>
-  </section>
-
-  <!-- ==================== WORKS / PROJECTS ==================== -->
-  <section id="works" class="py-20 md:py-32 px-6 md:px-10 bg-ink text-white">
-    <div class="max-w-6xl mx-auto">
-      <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-16">
-        <div class="scroll-reveal op-0">
-          <span class="text-[10px] font-bold tracking-[0.3em] uppercase text-white/40 block mb-4">02 — Karya Terpilih</span>
-          <h2 class="font-serif text-3xl md:text-4xl font-bold leading-tight">Selected<br><span class="italic text-accent">Works</span></h2>
-        </div>
-        <div class="flex gap-3 mt-6 md:mt-0 scroll-reveal op-0 delay-2">
-          <button onclick="filterWorks('all')" class="filter-btn active px-4 py-2 text-[10px] font-bold tracking-[0.2em] uppercase border border-white/30 bg-white text-ink rounded-none transition-all duration-300" data-filter="all">Semua</button>
-          <button onclick="filterWorks('featured')" class="filter-btn px-4 py-2 text-[10px] font-bold tracking-[0.2em] uppercase border border-white/20 text-white/60 hover:border-white/50 hover:text-white rounded-none transition-all duration-300" data-filter="featured">Unggulan</button>
-        </div>
-      </div>
-
-      <!-- Works Grid -->
-      <div id="works-grid" class="grid md:grid-cols-2 gap-8">
-        <!-- Fallback static works -->
-        <div id="works-fallback">
-
-          <div class="work-item group cursor-pointer scroll-reveal op-0" data-featured="true">
-            <div class="relative overflow-hidden aspect-[4/3]">
-              <img src="https://picsum.photos/seed/artwork1/800/600.jpg" alt="Urban Fragments" class="work-img w-full h-full object-cover grayscale contrast-110 transition-transform duration-700 ease-out">
-              <div class="work-overlay absolute inset-0 bg-accent/20 opacity-0 transition-opacity duration-500"></div>
-              <div class="absolute top-4 left-4">
-                <span class="stamp text-[9px] py-1 px-2 border-white text-white" style="transform:rotate(-8deg)">Featured</span>
-              </div>
-              <div class="absolute bottom-4 right-4 w-8 h-8 border border-white/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-white"></i>
-              </div>
-            </div>
-            <div class="mt-4 flex items-start justify-between">
-              <div>
-                <h3 class="work-title font-serif text-lg font-bold tracking-wide transition-all duration-300">Urban Fragments</h3>
-                <p class="text-[10px] tracking-[0.15em] uppercase text-white/40 mt-1">Fotografi — 2024</p>
-              </div>
-              <span class="text-[10px] text-white/30 font-mono">01</span>
-            </div>
-          </div>
-
-          <div class="work-item group cursor-pointer mt-8 scroll-reveal op-0 delay-1" data-featured="true">
-            <div class="relative overflow-hidden aspect-[4/3]">
-              <img src="https://picsum.photos/seed/artwork2/800/600.jpg" alt="Silent Conversations" class="work-img w-full h-full object-cover grayscale contrast-110 transition-transform duration-700 ease-out">
-              <div class="work-overlay absolute inset-0 bg-accent/20 opacity-0 transition-opacity duration-500"></div>
-              <div class="absolute top-4 left-4">
-                <span class="stamp text-[9px] py-1 px-2 border-white text-white" style="transform:rotate(-8deg)">Featured</span>
-              </div>
-              <div class="absolute bottom-4 right-4 w-8 h-8 border border-white/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-white"></i>
-              </div>
-            </div>
-            <div class="mt-4 flex items-start justify-between">
-              <div>
-                <h3 class="work-title font-serif text-lg font-bold tracking-wide transition-all duration-300">Silent Conversations</h3>
-                <p class="text-[10px] tracking-[0.15em] uppercase text-white/40 mt-1">Ilustrasi Digital — 2024</p>
-              </div>
-              <span class="text-[10px] text-white/30 font-mono">02</span>
-            </div>
-          </div>
-
-          <div class="work-item group cursor-pointer mt-8 scroll-reveal op-0 delay-2" data-featured="false">
-            <div class="relative overflow-hidden aspect-[4/3]">
-              <img src="https://picsum.photos/seed/artwork3/800/600.jpg" alt="Metropolis Dreams" class="work-img w-full h-full object-cover grayscale contrast-110 transition-transform duration-700 ease-out">
-              <div class="work-overlay absolute inset-0 bg-accent/20 opacity-0 transition-opacity duration-500"></div>
-              <div class="absolute bottom-4 right-4 w-8 h-8 border border-white/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-white"></i>
-              </div>
-            </div>
-            <div class="mt-4 flex items-start justify-between">
-              <div>
-                <h3 class="work-title font-serif text-lg font-bold tracking-wide transition-all duration-300">Metropolis Dreams</h3>
-                <p class="text-[10px] tracking-[0.15em] uppercase text-white/40 mt-1">Poster — 2023</p>
-              </div>
-              <span class="text-[10px] text-white/30 font-mono">03</span>
-            </div>
-          </div>
-
-          <div class="work-item group cursor-pointer mt-8 scroll-reveal op-0 delay-3" data-featured="true">
-            <div class="relative overflow-hidden aspect-[4/3]">
-              <img src="https://picsum.photos/seed/artwork4/800/600.jpg" alt="Echoes of Light" class="work-img w-full h-full object-cover grayscale contrast-110 transition-transform duration-700 ease-out">
-              <div class="work-overlay absolute inset-0 bg-accent/20 opacity-0 transition-opacity duration-500"></div>
-              <div class="absolute top-4 left-4">
-                <span class="stamp text-[9px] py-1 px-2 border-white text-white" style="transform:rotate(-8deg)">Featured</span>
-              </div>
-              <div class="absolute bottom-4 right-4 w-8 h-8 border border-white/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-white"></i>
-              </div>
-            </div>
-            <div class="mt-4 flex items-start justify-between">
-              <div>
-                <h3 class="work-title font-serif text-lg font-bold tracking-wide transition-all duration-300">Echoes of Light</h3>
-                <p class="text-[10px] tracking-[0.15em] uppercase text-white/40 mt-1">Video Art — 2023</p>
-              </div>
-              <span class="text-[10px] text-white/30 font-mono">04</span>
-            </div>
-          </div>
-
-          <div class="work-item group cursor-pointer mt-8 scroll-reveal op-0 delay-4" data-featured="false">
-            <div class="relative overflow-hidden aspect-[4/3]">
-              <img src="https://picsum.photos/seed/artwork5/800/600.jpg" alt="Textured Memories" class="work-img w-full h-full object-cover grayscale contrast-110 transition-transform duration-700 ease-out">
-              <div class="work-overlay absolute inset-0 bg-accent/20 opacity-0 transition-opacity duration-500"></div>
-              <div class="absolute bottom-4 right-4 w-8 h-8 border border-white/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-white"></i>
-              </div>
-            </div>
-            <div class="mt-4 flex items-start justify-between">
-              <div>
-                <h3 class="work-title font-serif text-lg font-bold tracking-wide transition-all duration-300">Textured Memories</h3>
-                <p class="text-[10px] tracking-[0.15em] uppercase text-white/40 mt-1">Mixed Media — 2023</p>
-              </div>
-              <span class="text-[10px] text-white/30 font-mono">05</span>
-            </div>
-          </div>
-
-          <div class="work-item group cursor-pointer mt-8 scroll-reveal op-0 delay-5" data-featured="false">
-            <div class="relative overflow-hidden aspect-[4/3]">
-              <img src="https://picsum.photos/seed/artwork6/800/600.jpg" alt="Between Lines" class="work-img w-full h-full object-cover grayscale contrast-110 transition-transform duration-700 ease-out">
-              <div class="work-overlay absolute inset-0 bg-accent/20 opacity-0 transition-opacity duration-500"></div>
-              <div class="absolute bottom-4 right-4 w-8 h-8 border border-white/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-white"></i>
-              </div>
-            </div>
-            <div class="mt-4 flex items-start justify-between">
-              <div>
-                <h3 class="work-title font-serif text-lg font-bold tracking-wide transition-all duration-300">Between Lines</h3>
-                <p class="text-[10px] tracking-[0.15em] uppercase text-white/40 mt-1">Ilustrasi — 2022</p>
-              </div>
-              <span class="text-[10px] text-white/30 font-mono">06</span>
-            </div>
-          </div>
-
-        </div>
-
-        <div id="works-dynamic" class="grid md:grid-cols-2 gap-8 hidden"></div>
-      </div>
+    <div>
+      <div class="field"><span class="k">Aktif sejak</span><span class="v">2021</span></div>
+      <div class="field"><span class="k">Disiplin</span><span class="v">Kolase / Fotografi</span></div>
+      <div class="field"><span class="k">Basis</span><span class="v">Bandung, ID</span></div>
+      <div class="field"><span class="k">Afiliasi</span><span class="v">NCA</span></div>
+      <div class="field"><span class="k">Media</span><span class="v">Digital + Cetak</span></div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ==================== EXPERIENCE ==================== -->
-  <section id="experience" class="py-20 md:py-32 px-6 md:px-10">
-    <div class="max-w-6xl mx-auto">
-      <div class="mb-16 scroll-reveal op-0">
-        <span class="text-[10px] font-bold tracking-[0.3em] uppercase text-muted block mb-4">03 — Pengalaman</span>
-        <h2 class="font-serif text-3xl md:text-4xl font-bold leading-tight">Exhibitions &<br><span class="italic text-accent">Collaborations</span></h2>
-      </div>
+<section class="sect wrap" id="work">
+  <div class="sect-head"><span class="no">02</span><h2>Karya</h2></div>
+  <div id="workGrid" class="grid-work">
+    <p class="state-msg">Memuat karya dari basis data…</p>
+  </div>
+</section>
 
-      <div id="exp-list" class="border-t border-ink">
-        <!-- Fallback -->
-        <div id="exp-fallback">
-          <div class="exp-item group py-8 border-b border-ink/20 grid grid-cols-12 gap-4 items-start scroll-reveal op-0 hover:bg-ink/[0.02] transition-colors duration-300 px-2 -mx-2">
-            <div class="col-span-2 md:col-span-1">
-              <span class="font-mono text-xs text-muted">2024</span>
-            </div>
-            <div class="col-span-10 md:col-span-5">
-              <h3 class="font-serif text-lg font-bold group-hover:text-accent transition-colors duration-300">Urban Fragments — Solo Exhibition</h3>
-              <p class="text-xs text-muted mt-1">Galeri Nasional Indonesia, Jakarta</p>
-            </div>
-            <div class="col-span-12 md:col-span-4 md:col-start-8">
-              <p class="text-xs text-muted leading-relaxed">Pameran tunggal yang mengeksplorasi fragmentasi ruang urban melalui fotografi analog dan digital.</p>
-            </div>
-          </div>
-
-          <div class="exp-item group py-8 border-b border-ink/20 grid grid-cols-12 gap-4 items-start scroll-reveal op-0 delay-1 hover:bg-ink/[0.02] transition-colors duration-300 px-2 -mx-2">
-            <div class="col-span-2 md:col-span-1">
-              <span class="font-mono text-xs text-muted">2023</span>
-            </div>
-            <div class="col-span-10 md:col-span-5">
-              <h3 class="font-serif text-lg font-bold group-hover:text-accent transition-colors duration-300">Silent Voices — Group Exhibition</h3>
-              <p class="text-xs text-muted mt-1">ARTJOG 2023, Yogyakarta</p>
-            </div>
-            <div class="col-span-12 md:col-span-4 md:col-start-8">
-              <p class="text-xs text-muted leading-relaxed">Kolaborasi dengan 12 seniman visual dari Asia Tenggara dengan tema narasi yang terpendam.</p>
-            </div>
-          </div>
-
-          <div class="exp-item group py-8 border-b border-ink/20 grid grid-cols-12 gap-4 items-start scroll-reveal op-0 delay-2 hover:bg-ink/[0.02] transition-colors duration-300 px-2 -mx-2">
-            <div class="col-span-2 md:col-span-1">
-              <span class="font-mono text-xs text-muted">2023</span>
-            </div>
-            <div class="col-span-10 md:col-span-5">
-              <h3 class="font-serif text-lg font-bold group-hover:text-accent transition-colors duration-300">Brand Collaboration — Toko Kerja</h3>
-              <p class="text-xs text-muted mt-1">Visual Identity & Merchandise</p>
-            </div>
-            <div class="col-span-12 md:col-span-4 md:col-start-8">
-              <p class="text-xs text-muted leading-relaxed">Desain identitas visual dan merchandise untuk brand lokal berbasis komunitas kreatif.</p>
-            </div>
-          </div>
-
-          <div class="exp-item group py-8 border-b border-ink/20 grid grid-cols-12 gap-4 items-start scroll-reveal op-0 delay-3 hover:bg-ink/[0.02] transition-colors duration-300 px-2 -mx-2">
-            <div class="col-span-2 md:col-span-1">
-              <span class="font-mono text-xs text-muted">2022</span>
-            </div>
-            <div class="col-span-10 md:col-span-5">
-              <h3 class="font-serif text-lg font-bold group-hover:text-accent transition-colors duration-300">Residency Program — Ruangrupa</h3>
-              <p class="text-xs text-muted mt-1">Jakarta, 3 bulan</p>
-            </div>
-            <div class="col-span-12 md:col-span-4 md:col-start-8">
-              <p class="text-xs text-muted leading-relaxed">Program residensi seni dengan fokus pada seni publik dan partisipasi komunitas.</p>
-            </div>
-          </div>
-
-          <div class="exp-item group py-8 border-b border-ink/20 grid grid-cols-12 gap-4 items-start scroll-reveal op-0 delay-4 hover:bg-ink/[0.02] transition-colors duration-300 px-2 -mx-2">
-            <div class="col-span-2 md:col-span-1">
-              <span class="font-mono text-xs text-muted">2021</span>
-            </div>
-            <div class="col-span-10 md:col-span-5">
-              <h3 class="font-serif text-lg font-bold group-hover:text-accent transition-colors duration-300">Beginnings — First Group Show</h3>
-              <p class="text-xs text-muted mt-1">Komunitas Salihara, Jakarta</p>
-            </div>
-            <div class="col-span-12 md:col-span-4 md:col-start-8">
-              <p class="text-xs text-muted leading-relaxed">Pameran pertama bersama komunitas seniman muda Jakarta dengan 8 karya awal.</p>
-            </div>
-          </div>
-        </div>
-
-        <div id="exp-dynamic" class="hidden"></div>
-      </div>
-
-      <div id="supabase-status" class="mt-8 scroll-reveal op-0">
-        <span class="inline-flex items-center gap-2 px-3 py-1.5 bg-ink/5 rounded-none text-[10px] tracking-[0.15em] uppercase text-muted font-semibold">
-          <span class="w-1.5 h-1.5 bg-muted/50 rounded-full"></span>
-          Data statis — hubungkan Supabase
-        </span>
-      </div>
+<section class="sect wrap" id="contact">
+  <div class="sect-head"><span class="no">03</span><h2>Kontak</h2></div>
+  <div class="contact-box">
+    <div>
+      <div class="line"><span class="k">Email</span>hello@christopherpadilla.dev</div>
+      <div class="line"><span class="k">Telepon</span>+62 838 7841 290</div>
+      <div class="line"><span class="k">Lokasi</span>Bandung, Jawa Barat, ID</div>
+      <div class="line"><span class="k">Instagram</span>@christopher.padilla</div>
     </div>
-  </section>
+    <form class="cf" id="contactForm">
+      <input type="text" name="name" placeholder="Nama" required>
+      <input type="email" name="email" placeholder="Email" required>
+      <textarea name="message" rows="3" placeholder="Pesan"></textarea>
+      <button type="submit">Kirim</button>
+    </form>
+  </div>
+</section>
 
-  <!-- ==================== CONTACT ==================== -->
-  <section id="contact" class="py-20 md:py-32 px-6 md:px-10 bg-ink text-white">
-    <div class="max-w-6xl mx-auto">
-      <div class="grid lg:grid-cols-2 gap-16">
-        
-        <div class="scroll-reveal op-0">
-          <span class="text-[10px] font-bold tracking-[0.3em] uppercase text-white/40 block mb-4">04 — Kontak</span>
-          <h2 class="font-serif text-4xl md:text-5xl font-bold leading-tight mb-6">
-            Mari <span class="italic text-accent">berbicara</span>
-          </h2>
-          <p class="text-sm text-white/50 leading-relaxed max-w-sm mb-10">
-            Terbuka untuk kolaborasi seni, komisi karya, pameran, atau sekadar ngobrol tentang kreativitas.
-          </p>
+<footer>© 2026 Christopher Padilla — Dokumen ini disusun sebagai arsip portofolio visual.</footer>
 
-          <div class="space-y-6">
-            <div>
-              <div class="text-[10px] tracking-[0.2em] uppercase text-white/30 mb-2">Email</div>
-              <a href="mailto:christopher@example.com" class="text-sm text-white/80 hover:text-accent transition-colors">christopher@example.com</a>
-            </div>
-            <div>
-              <div class="text-[10px] tracking-[0.2em] uppercase text-white/30 mb-2">Instagram</div>
-              <a href="#" class="text-sm text-white/80 hover:text-accent transition-colors">@christopher.padilla</a>
-            </div>
-            <div>
-              <div class="text-[10px] tracking-[0.2em] uppercase text-white/30 mb-2">Berdasarkan di</div>
-              <span class="text-sm text-white/80">Jakarta, Indonesia</span>
-            </div>
-          </div>
-        </div>
+<!-- ============================================================
+  SUPABASE INTEGRATION
+  1. npm install @supabase/supabase-js  (or use the CDN script below)
+  2. Isi SUPABASE_URL & SUPABASE_ANON_KEY di bawah.
+  3. Buat tabel "projects" dengan kolom: id, title, description, year, image_url
+  4. Deploy ke Vercel seperti biasa (project ini adalah static HTML,
+     bisa juga dipindah jadi komponen React/Next.js kalau perlu).
+============================================================ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = "https://sbowhbkaihqlnznzaqkv.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNib3doYmthaWhxbG56bnphcWt2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM1ODQyMzUsImV4cCI6MjA5OTE2MDIzNX0.6GYFzKQiV5Qs5oGcJ1ecumnbw2_nqv_WKHaKQOmNQFE";
+  let supabase = null;
+  try {
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  } catch (e) { console.warn("Supabase belum dikonfigurasi:", e); }
 
-        <div class="scroll-reveal op-0 delay-2">
-          <form id="contact-form" class="space-y-5">
-            <div class="grid grid-cols-2 gap-4">
-              <div>
-                <label class="text-[10px] tracking-[0.2em] uppercase text-white/30 block mb-2">Nama</label>
-                <input type="text" id="name" required placeholder="Nama Anda"
-                  class="w-full bg-transparent border-b border-white/20 px-0 py-3 text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-accent transition-colors duration-300">
-              </div>
-              <div>
-                <label class="text-[10px] tracking-[0.2em] uppercase text-white/30 block mb-2">Email</label>
-                <input type="email" id="email" required placeholder="email@anda.com"
-                  class="w-full bg-transparent border-b border-white/20 px-0 py-3 text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-accent transition-colors duration-300">
-              </div>
-            </div>
-            <div>
-              <label class="text-[10px] tracking-[0.2em] uppercase text-white/30 block mb-2">Subjek</label>
-              <input type="text" id="subject" placeholder="Tentang apa?"
-                class="w-full bg-transparent border-b border-white/20 px-0 py-3 text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-accent transition-colors duration-300">
-            </div>
-            <div>
-              <label class="text-[10px] tracking-[0.2em] uppercase text-white/30 block mb-2">Pesan</label>
-              <textarea id="message" rows="4" required placeholder="Ceritakan ide Anda..."
-                class="w-full bg-transparent border-b border-white/20 px-0 py-3 text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-accent transition-colors duration-300 resize-none"></textarea>
-            </div>
-            <button type="submit" id="submit-btn"
-              class="group mt-4 inline-flex items-center gap-3 px-8 py-4 border border-white/30 text-[11px] font-bold tracking-[0.2em] uppercase hover:bg-white hover:text-ink transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed">
-              <span id="submit-text">Kirim Pesan</span>
-              <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" id="submit-icon"></i>
-              <svg id="submit-spinner" class="hidden animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-dasharray="31.4 31.4" stroke-dashoffset="10"></circle>
-              </svg>
-            </button>
-          </form>
-        </div>
+  async function loadWork(){
+    const grid = document.getElementById('workGrid');
+    if (!supabase || SUPABASE_URL.includes("YOUR-PROJECT")) {
+      grid.innerHTML = '<p class="state-msg">Hubungkan Supabase Anda (isi SUPABASE_URL & SUPABASE_ANON_KEY di script) untuk menampilkan karya secara otomatis.</p>';
+      return;
+    }
+    const { data, error } = await supabase
+      .from('projects')
+      .select('*')
+      .order('year', { ascending: false });
+
+    if (error || !data || data.length === 0) {
+      grid.innerHTML = '<p class="state-msg">Belum ada karya untuk ditampilkan.</p>';
+      return;
+    }
+    grid.innerHTML = data.map((p, i) => `
+      <div class="card">
+        <span class="tag">FILE ${String(i+1).padStart(2,'0')}</span>
+        <div class="thumb" style="background-image:url('${p.image_url || ''}')"></div>
+        <h3>${p.title || 'Untitled'}</h3>
+        <p>${p.description || ''}</p>
+        <span class="yr">${p.year || ''}</span>
       </div>
-    </div>
-  </section>
+    `).join('');
+  }
+  loadWork();
 
-  <!-- ==================== FOOTER ==================== -->
-  <footer class="py-10 px-6 md:px-10 border-t border-line">
-    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-      <div class="flex items-center gap-4">
-        <span class="font-serif font-bold text-sm">C.P</span>
-        <span class="text-[10px] text-muted tracking-wider">© 2025 Christopher Padilla. All rights reserved.</span>
-      </div>
-      <div class="flex items-center gap-1">
-        <a href="#" class="w-8 h-8 flex items-center justify-center hover:bg-ink/5 transition-colors duration-200">
-          <i data-lucide="instagram" class="w-3.5 h-3.5 text-muted"></i>
-        </a>
-        <a href="#" class="w-8 h-8 flex items-center justify-center hover:bg-ink/5 transition-colors duration-200">
-          <i data-lucide="twitter" class="w-3.5 h-3.5 text-muted"></i>
-        </a>
-        <a href="#" class="w-8 h-8 flex items-center justify-center hover:bg-ink/5 transition-colors duration-200">
-          <i data-lucide="dribbble" class="w-3.5 h-3.5 text-muted"></i>
-        </a>
-        <a href="#" class="w-8 h-8 flex items-center justify-center hover:bg-ink/5 transition-colors duration-200">
-          <i data-lucide="mail" class="w-3.5 h-3.5 text-muted"></i>
-        </a>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Back to Top -->
-  <button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})"
-    class="no-print fixed bottom-6 right-6 w-10 h-10 bg-ink text-white flex items-center justify-center opacity-0 translate-y-4 pointer-events-none transition-all duration-500 hover:bg-accent z-50">
-    <i data-lucide="arrow-up" class="w-4 h-4"></i>
-  </button>
-
-
-  <script>
-    // ============================================
-    // SUPABASE
-    // ============================================
-    const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
-    let supabase = null, isSupabaseConnected = false, allWorks = [];
-
-    function initSupabase() {
-      if (SUPABASE_URL === 'YOUR_SUPABASE_URL' || !SUPABASE_URL) {
-        updateStatus(false); return;
-      }
-      try {
-        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        isSupabaseConnected = true;
-        updateStatus(true);
-        loadSupabaseData();
-      } catch(e) { updateStatus(false); }
+  // Simple contact form — swap for a Supabase table insert or an API route.
+  document.getElementById('contactForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const payload = Object.fromEntries(fd.entries());
+    if (supabase && !SUPABASE_URL.includes("YOUR-PROJECT")) {
+      const { error } = await supabase.from('messages').insert([payload]);
+      alert(error ? 'Gagal mengirim pesan.' : 'Pesan terkirim, terima kasih!');
+    } else {
+      alert('Form siap — hubungkan Supabase untuk menyimpan pesan.');
     }
-
-    function updateStatus(ok) {
-      const el = document.getElementById('supabase-status');
-      if (!el) return;
-      el.innerHTML = ok
-        ? `<span class="inline-flex items-center gap-2 px-3 py-1.5 bg-accent/10 rounded-none text-[10px] tracking-[0.15em] uppercase text-accent font-semibold"><span class="w-1.5 h-1.5 bg-accent rounded-full" style="animation:pulse-dot 2s infinite"></span>Terhubung ke Supabase</span>`
-        : `<span class="inline-flex items-center gap-2 px-3 py-1.5 bg-ink/5 rounded-none text-[10px] tracking-[0.15em] uppercase text-muted font-semibold"><span class="w-1.5 h-1.5 bg-muted/50 rounded-full"></span>Data statis — hubungkan Supabase</span>`;
-    }
-
-    async function loadSupabaseData() {
-      await loadWorks();
-      await loadExperiences();
-    }
-
-    async function loadWorks() {
-      try {
-        const { data, error } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
-        if (error) throw error;
-        if (data?.length) {
-          document.getElementById('works-fallback').classList.add('hidden');
-          const c = document.getElementById('works-dynamic');
-          c.classList.remove('hidden');
-          allWorks = data;
-          renderWorks(data);
-        }
-      } catch(e) { console.error('Works error:', e); }
-    }
-
-    async function loadExperiences() {
-      try {
-        const { data, error } = await supabase.from('experiences').select('*').order('created_at', { ascending: true });
-        if (error) throw error;
-        if (data?.length) {
-          document.getElementById('exp-fallback').classList.add('hidden');
-          const c = document.getElementById('exp-dynamic');
-          c.classList.remove('hidden');
-          c.innerHTML = data.map((exp, i) => {
-            const year = exp.period?.match(/\d{4}/)?.[0] || '';
-            return `<div class="exp-item group py-8 border-b border-ink/20 grid grid-cols-12 gap-4 items-start scroll-reveal op-0 hover:bg-ink/[0.02] transition-colors duration-300 px-2 -mx-2" style="animation-delay:${i*0.1}s">
-              <div class="col-span-2 md:col-span-1"><span class="font-mono text-xs text-muted">${year}</span></div>
-              <div class="col-span-10 md:col-span-5">
-                <h3 class="font-serif text-lg font-bold group-hover:text-accent transition-colors duration-300">${exp.role}</h3>
-                <p class="text-xs text-muted mt-1">${exp.company}</p>
-              </div>
-              <div class="col-span-12 md:col-span-4 md:col-start-8">
-                <p class="text-xs text-muted leading-relaxed">${exp.description || ''}</p>
-              </div>
-            </div>`;
-          }).join('');
-          observeScroll();
-        }
-      } catch(e) { console.error('Exp error:', e); }
-    }
-
-    function renderWorks(works) {
-      if (!isSupabaseConnected) {
-        document.querySelectorAll('.work-item').forEach(item => {
-          const feat = item.dataset.featured === 'true';
-          item.style.display = (currentFilter === 'all' || (currentFilter === 'featured' && feat)) ? '' : 'none';
-        });
-        return;
-      }
-      const c = document.getElementById('works-dynamic');
-      c.innerHTML = works.map((w, i) => `
-        <div class="work-item group cursor-pointer" data-featured="${w.featured}">
-          <div class="relative overflow-hidden aspect-[4/3]">
-            <img src="${w.image_url || 'https://picsum.photos/seed/'+w.id+'/800/600.jpg'}" alt="${w.title}" class="work-img w-full h-full object-cover grayscale contrast-110 transition-transform duration-700 ease-out">
-            <div class="work-overlay absolute inset-0 bg-accent/20 opacity-0 transition-opacity duration-500"></div>
-            ${w.featured ? '<div class="absolute top-4 left-4"><span class="stamp text-[9px] py-1 px-2 border-white text-white" style="transform:rotate(-8deg)">Featured</span></div>' : ''}
-            <div class="absolute bottom-4 right-4 w-8 h-8 border border-white/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-white"></i>
-            </div>
-          </div>
-          <div class="mt-4 flex items-start justify-between">
-            <div>
-              <h3 class="work-title font-serif text-lg font-bold tracking-wide transition-all duration-300">${w.title}</h3>
-              <p class="text-[10px] tracking-[0.15em] uppercase text-white/40 mt-1">${(w.tech_stack||[]).join(' — ')} — ${new Date(w.created_at).getFullYear()}</p>
-            </div>
-            <span class="text-[10px] text-white/30 font-mono">0${i+1}</span>
-          </div>
-        </div>`).join('');
-      lucide.createIcons();
-    }
-
-    let currentFilter = 'all';
-    function filterWorks(f) {
-      currentFilter = f;
-      document.querySelectorAll('.filter-btn').forEach(b => {
-        const active = b.dataset.filter === f;
-        b.classList.toggle('bg-white', active);
-        b.classList.toggle('text-ink', active);
-        b.classList.toggle('border-white/30', active);
-        b.classList.toggle('text-white/60', !active);
-        b.classList.toggle('border-white/20', !active);
-      });
-      if (isSupabaseConnected && allWorks.length) {
-        renderWorks(f === 'all' ? allWorks : allWorks.filter(w => w.featured));
-      } else {
-        renderWorks([]);
-      }
-    }
-
-    // ============================================
-    // CONTACT FORM
-    // ============================================
-    document.getElementById('contact-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const btn = document.getElementById('submit-btn');
-      const txt = document.getElementById('submit-text');
-      const ico = document.getElementById('submit-icon');
-      const spin = document.getElementById('submit-spinner');
-      btn.disabled = true; txt.textContent = 'Mengirim...'; ico.classList.add('hidden'); spin.classList.remove('hidden');
-
-      const data = {
-        name: document.getElementById('name').value,
-        email: document.getElementById('email').value,
-        subject: document.getElementById('subject').value,
-        message: document.getElementById('message').value,
-      };
-
-      if (isSupabaseConnected) {
-        try {
-          const { error } = await supabase.from('contacts').insert([data]);
-          if (error) throw error;
-          showToast('Pesan terkirim! Saya akan segera merespons.', 'success');
-          e.target.reset();
-        } catch(err) {
-          showToast('Gagal mengirim. Coba lagi atau hubungi via email.', 'error');
-        }
-      } else {
-        await new Promise(r => setTimeout(r, 1200));
-        showToast('Terkirim (demo)! Hubungkan Supabase untuk pengiriman nyata.', 'success');
-        e.target.reset();
-      }
-
-      btn.disabled = false; txt.textContent = 'Kirim Pesan'; ico.classList.remove('hidden'); spin.classList.add('hidden');
-    });
-
-    // ============================================
-    // TOAST
-    // ============================================
-    function showToast(msg, type='info') {
-      const c = document.getElementById('toast-container');
-      const t = document.createElement('div');
-      const cls = { success:'bg-accent text-white', error:'bg-red-800 text-white', info:'bg-ink text-white' };
-      const icons = { success:'check-circle', error:'alert-circle', info:'info' };
-      t.className = `toast-enter flex items-start gap-3 px-5 py-4 ${cls[type]} max-w-sm`;
-      t.innerHTML = `<i data-lucide="${icons[type]}" class="w-4 h-4 mt-0.5 flex-shrink-0"></i><p class="text-xs font-medium leading-relaxed">${msg}</p>`;
-      c.appendChild(t); lucide.createIcons();
-      setTimeout(() => { t.classList.replace('toast-enter','toast-exit'); setTimeout(() => t.remove(), 300); }, 4000);
-    }
-
-    // ============================================
-    // MOBILE MENU
-    // ============================================
-    const mBtn = document.getElementById('mobile-menu-btn');
-    const mMenu = document.getElementById('mobile-menu');
-    let mOpen = false;
-    mBtn.addEventListener('click', () => { mOpen = !mOpen; mMenu.classList.toggle('hidden', !mOpen); });
-    document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', () => { mOpen = false; mMenu.classList.add('hidden'); }));
-
-    // ============================================
-    // SCROLL EFFECTS
-    // ============================================
-    function observeScroll() {
-      const obs = new IntersectionObserver((entries) => {
-        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('anim-fade-up'); obs.unobserve(e.target); } });
-      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-      document.querySelectorAll('.scroll-reveal.op-0').forEach(el => obs.observe(el));
-    }
-
-    // Active nav
-    window.addEventListener('scroll', () => {
-      const sections = document.querySelectorAll('section[id]');
-      let cur = '';
-      sections.forEach(s => { if (scrollY >= s.offsetTop - 120) cur = s.id; });
-      document.querySelectorAll('.nav-link').forEach(l => {
-        const match = l.getAttribute('href') === '#' + cur;
-        l.classList.toggle('text-ink', match);
-        l.classList.toggle('text-muted', !match);
-      });
-
-      // Back to top
-      const btt = document.getElementById('back-to-top');
-      if (scrollY > 600) { btt.classList.remove('opacity-0','translate-y-4','pointer-events-none'); btt.classList.add('opacity-100','translate-y-0'); }
-      else { btt.classList.add('opacity-0','translate-y-4','pointer-events-none'); btt.classList.remove('opacity-100','translate-y-0'); }
-    });
-
-    // ============================================
-    // INIT
-    // ============================================
-    document.addEventListener('DOMContentLoaded', () => {
-      lucide.createIcons();
-      observeScroll();
-      initSupabase();
-    });
-  </script>
+    e.target.reset();
+  });
+</script>
 </body>
 </html>
